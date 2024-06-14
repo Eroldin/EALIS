@@ -2,6 +2,7 @@
 set -e
 
 : <<-'#END_COMMENT'
+	!!!WARNING!!! Run this script only after you've ran part1 and rebooted in your new system!
 	This script works with a plugin system. This means a few programs won't get installed if you run it as is.
 	An example is the NVidia driver. To install it (and other programs) copy the correspondencing plugin to the main folder (where the system.sh script is located):
 	$ cp -v /ealis/Plugins/nvidia.plugin /ealis/
