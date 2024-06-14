@@ -2,7 +2,7 @@
 set -e
 : <<-'#END_COMMENT'
 	Before running this script. Make sure everything is correctly mounted at "/mnt". Make sure this project is cloned on /mnt (your root) as well.
-	The default kernel is the zen kernel. You can change that, by copying the corresponding plugins to the root folder of the script (/mnt/EALIS)
+	The default kernel is the zen kernel. You can change that, by copying the corresponding plugins to the root folder of the script (/mnt/ealis)
 	Keep in mind that this script is meant for systems with 8G ram or more. Less ram might work after you edit this script.
 #END_COMMENT
 mkdir -p /mnt/etc/mkinitcpio.d/
@@ -17,25 +17,129 @@ if [[ -z $VIRTMACH ]]; then
 fi
 XFS="$(findmnt -n | grep -o xfs | head -1 || true)"
 BTRFS="$(findmnt -n | grep -o btrfs | head -1 || true)"
-if [[ -f /mnt/EALIS/kernel.plugin ]]; then
+if [[ -f /mnt/ealis/kernel.plugin ]]; then
 	KERNEL=($KERNEL linux linux-headers) # Only necessary if you want this alongside another kernel.
 fi
-if [[ -f /mnt/EALIS/kernel-lts.plugin ]]; then
+if [[ -f /mnt/ealis/kernel-lts.plugin ]]; then
 	KERNEL=($KERNEL linux-lts linux-lts-headers)
 fi
-if [[ -f /mnt/EALIS/kernel-hardened.plugin ]]; then
+if [[ -f /mnt/ealis/kernel-hardened.plugin ]]; then
 	KERNEL=($KERNEL linux-hardened linux-hardened-headers)
 fi
-if [[ -f /mnt/EALIS/kernel-zen.plugin ]]; then
+if [[ -f /mnt/ealis/kernel-zen.plugin ]]; then
 	KERNEL=($KERNEL linux-zen linux-zen-headers)
 fi
-if [[ -f /mnt/EALIS/kernel-zen.plugin || -f /mnt/EALIS/kernel-lts.plugin || -f /mnt/EALIS/kernel-hardened.plugin ]]; then
+if [[ -f /mnt/ealis/kernel-zen.plugin || -f /mnt/ealis/kernel-lts.plugin || -f /mnt/ealis/kernel-hardened.plugin ]]; then
 	:
 else
 	KERNEL=(linux linux-headers)
 fi
+
+# Optimising your pacman configuration
+cat <<-'EOF' > /etc/pacman.conf
+	#
+	# /etc/pacman.conf
+	#
+	# See the pacman.conf(5) manpage for option and repository directives
+	
+	#
+	# GENERAL OPTIONS
+	#
+	[options]
+	# The following paths are commented out with their default values listed.
+	# If you wish to use different paths, uncomment and update the paths.
+	#RootDir     = /
+	#DBPath      = /var/lib/pacman/
+	#CacheDir    = /var/cache/pacman/pkg/
+	CacheDir    = /var/cache/pacman/pkg/
+	CacheDir    = /var/cache/pacman/aur/
+	#LogFile     = /var/log/pacman.log
+	#GPGDir      = /etc/pacman.d/gnupg/
+	#HookDir     = /etc/pacman.d/hooks/
+	HoldPkg     = pacman glibc
+	#XferCommand = /usr/bin/curl -L -C - -f -o %o %u
+	#XferCommand = /usr/bin/wget --passive-ftp -c -O %o %u
+	#CleanMethod = KeepInstalled
+	Architecture = auto
+	
+	#IgnorePkg   =
+	#IgnorePkg   =
+	#IgnoreGroup =
+	
+	#NoUpgrade   =
+	#NoExtract   =
+	
+	# Misc options
+	#UseSyslog
+	#Color
+	#NoProgressBar
+	CheckSpace
+	#VerbosePkgLists
+	ParallelDownloads = 4
+	
+	# By default, pacman accepts packages signed by keys that its local keyring
+	# trusts (see pacman-key and its man page), as well as unsigned packages.
+	SigLevel    = Required DatabaseOptional
+	LocalFileSigLevel = Optional
+	#RemoteFileSigLevel = Required
+	
+	# NOTE: You must run `pacman-key --init` before first using pacman; the local
+	# keyring can then be populated with the keys of all official Arch Linux
+	# packagers with `pacman-key --populate archlinux`.
+	
+	#
+	# REPOSITORIES
+	#   - can be defined here or included from another file
+	#   - pacman will search repositories in the order defined here
+	#   - local/custom mirrors can be added here or in separate files
+	#   - repositories listed first will take precedence when packages
+	#     have identical names, regardless of version number
+	#   - URLs will have $repo replaced by the name of the current repo
+	#   - URLs will have $arch replaced by the name of the architecture
+	#
+	# Repository entries are of the format:
+	#       [repo-name]
+	#       Server = ServerName
+	#       Include = IncludePath
+	#
+	# The header [repo-name] is crucial - it must be present and
+	# uncommented to enable the repo.
+	#
+	
+	# The testing repositories are disabled by default. To enable, uncomment the
+	# repo name header and Include lines. You can add preferred servers immediately
+	# after the header, and they will be used before the default mirrors.
+	
+	#[core-testing]
+	#Include = /etc/pacman.d/mirrorlist
+	
+	[core]
+	Include = /etc/pacman.d/mirrorlist
+	
+	#[extra-testing]
+	#Include = /etc/pacman.d/mirrorlist
+	
+	[extra]
+	Include = /etc/pacman.d/mirrorlist
+	
+	# If you want to run 32 bit applications on your x86_64 system,
+	# enable the multilib repositories as required here.
+	
+	#[multilib-testing]
+	#Include = /etc/pacman.d/mirrorlist
+	
+	[multilib]
+	Include = /etc/pacman.d/mirrorlist
+	
+	# An example of a custom package repository.  See the pacman manpage for
+	# tips on creating your own repositories.
+	#[custom]
+	#SigLevel = Optional TrustAll
+	#Server = file:///home/custompkgs
+EOF
+
 # No fallbackimages will be created if the LTS kernel installed alongside other kernels.
-if [[ -f /mnt/EALIS/kernel.plugin && -f /mnt/EALIS/kernel-lts.plugin ]]; then
+if [[ -f /mnt/ealis/kernel.plugin && -f /mnt/ealis/kernel-lts.plugin ]]; then
 cat <<-'EOF' > /mnt/etc/mkinitcpio.d/linux.preset
 	# mkinitcpio preset file for the 'linux' package
 	
@@ -75,7 +179,7 @@ cat <<-'EOF' > /mnt/etc/mkinitcpio.d/linux-lts.preset
 	fallback_options="-S autodetect"
 EOF
 fi
-if [[ -f /mnt/EALIS/kernel-hardened.plugin && -f /mnt/EALIS/kernel-lts.plugin ]]; then
+if [[ -f /mnt/ealis/kernel-hardened.plugin && -f /mnt/ealis/kernel-lts.plugin ]]; then
 cat <<-'EOF' > /mnt/etc/mkinitcpio.d/linux-hardened.preset
 	# mkinitcpio preset file for the 'linux-hardened' package
 	
@@ -115,7 +219,7 @@ cat <<-'EOF' > /mnt/etc/mkinitcpio.d/linux-lts.preset
 	fallback_options="-S autodetect"
 EOF
 fi
-if [[ -f /mnt/EALIS/kernel-zen.plugin && -f /mnt/EALIS/kernel-lts.plugin ]]; then
+if [[ -f /mnt/ealis/kernel-zen.plugin && -f /mnt/ealis/kernel-lts.plugin ]]; then
 cat <<-'EOF' > /mnt/etc/mkinitcpio.d/linux-zen.preset
 	# mkinitcpio preset file for the 'linux-zen' package
 	
@@ -178,7 +282,7 @@ if [[ $LVMUSED = LVM2_member ]]; then
 fi
  
 
-chmod 777 -R /mnt/EALIS
+chmod 777 -R /mnt/ealis
 clear
 echo "Running the first part of the script." && sleep 2
 
@@ -271,7 +375,7 @@ arch-chroot /mnt zsh -c "locale-gen"
 pacstrap /mnt hunspell-nl hunspell-en_us
 
 # Installs adduser for easy user configuration.
-arch-chroot /mnt zsh -c "pacman -U --needed --noconfirm /EALIS/adduser-deb-3.137-1-any.pkg.tar.zst" >/dev/null # The sourcecode can be found here: https://salsa.debian.org/debian/adduser
+arch-chroot /mnt zsh -c "pacman -U --needed --noconfirm /ealis/adduser-deb-3.137-1-any.pkg.tar.zst" >/dev/null # The sourcecode can be found here: https://salsa.debian.org/debian/adduser
 sed -i 's/#DSHELL\=\/bin\/bash/DSHELL\=\/bin\/zsh/' /mnt/etc/adduser.conf
 
 # Sets the time to that in the Netherlands. Change to your country if needed.
@@ -545,7 +649,7 @@ while true; do
                         esac
                 done
         else
-                arch-chroot /mnt zsh -c "usermod root -p '!' -s /bin/zsh && adduser $VARUSERNAME && usermod $VARUSERNAME -aG wheel,users,$VARUSERNAME && cat /EALIS/sudoers | tee /etc/sudoers >/dev/null"
+                arch-chroot /mnt zsh -c "usermod root -p '!' -s /bin/zsh && adduser $VARUSERNAME && usermod $VARUSERNAME -aG wheel,users,$VARUSERNAME && cat /ealis/sudoers | tee /etc/sudoers >/dev/null"
                 break
         fi
 done
@@ -600,9 +704,9 @@ else
 fi
 
 # Changes the bootorder of your system so LTS is not the default.
-if [[ -f /mnt/EALIS/kernel.plugin && -f /mnt/EALIS/kernel-lts.plugin ]]; then
+if [[ -f /mnt/ealis/kernel.plugin && -f /mnt/ealis/kernel-lts.plugin ]]; then
 sed -i 's/-r/-V/' /mnt/etc/grub.d/10_linux
-elif [[ -f /mnt/EALIS/kernel-hardened.plugin && -f /mnt/EALIS/kernel-lts.plugin ]]; then
+elif [[ -f /mnt/ealis/kernel-hardened.plugin && -f /mnt/ealis/kernel-lts.plugin ]]; then
 sed -i 's/-r/-V/' /mnt/etc/grub.d/10_linux
 fi
 
