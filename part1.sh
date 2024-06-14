@@ -24,7 +24,7 @@ if [[ -f /mnt/ealis/kernel-lts.plugin ]]; then
 	KERNEL=($KERNEL linux-lts linux-lts-headers)
 fi
 if [[ -f /mnt/ealis/kernel-hardened.plugin ]]; then
-	KERNEL=($KERNEL linux-hardened linux-hardened-headers)
+	KERNEL=($KERNEL linux-hardened linux-hardened-headers bubblewrap-suid)
 fi
 if [[ -f /mnt/ealis/kernel-zen.plugin ]]; then
 	KERNEL=($KERNEL linux-zen linux-zen-headers)
