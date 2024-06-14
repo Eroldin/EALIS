@@ -4,7 +4,7 @@ set -e
 : <<-'#END_COMMENT'
 	This script works with a plugin system. This means a few programs won't get installed if you run it as is.
 	An example is the NVidia driver. To install it (and other programs) copy the correspondencing plugin to the main folder (where the system.sh script is located):
-	$ cp -v /EALIS/Plugins/nvidia.plugin /EALIS/
+	$ cp -v /ealis/Plugins/nvidia.plugin /ealis/
 	Examine this script to see what each plugin does.
 #END_COMMENT
 
@@ -14,75 +14,75 @@ echo "Running the second part of the script." && sleep 2
 CURRENTDIR="$(pwd)"
 setleds +num
 
-# If plugin files are copied to the root folder of this script (/EALIS) then said programs will be installed with the graphical environment.
+# If plugin files are copied to the root folder of this script (/ealis) then said programs will be installed with the graphical environment.
 # The snapper packages (if enabled) will be installed at the last moment.
-if [[ -f /EALIS/gamer.plugin ]]; then
+if [[ -f /ealis/gamer.plugin ]]; then
 	GAMER=(wine wine_gecko wine-mono winetricks lib32-pipewire lib32-alsa-lib lib32-alsa-plugins steam lutris protontricks protonup-qt)
 	GAMERFLAT=discord
 fi
-if [[ -f /EALIS/nvidia-old.plugin ]]; then
+if [[ -f /ealis/nvidia-old.plugin ]]; then
 	sudo sed -i 's/splash/splash\ ibt=off/' /etc/default/grub
  	sudo grub-mkconfig -o /boot/grub/grub.cfg
  	NVIDIA=(nvidia-470xx-dkms nvidia-470xx-utils lib32-nvidia-470xx-utils opencl-nvidia-470xx lib32-opencl-nvidia-470xx)
 fi
-if [[ -f /EALIS/kernel-lts.plugin || -f /EALIS/kernel-hardened.plugin || -f /EALIS/kernel-zen.plugin ]]; then
-	if [[ -f /EALIS/nvidia.plugin ]]; then
+if [[ -f /ealis/kernel-lts.plugin || -f /ealis/kernel-hardened.plugin || -f /ealis/kernel-zen.plugin ]]; then
+	if [[ -f /ealis/nvidia.plugin ]]; then
 		NVIDIA=(nvidia-dkms nvidia-utils cuda lib32-nvidia-utils lib32-opencl-nvidia)
 	fi
-	if [[ -f /EALIS/intel-nvidia-hybrid.plugin ]]; then
+	if [[ -f /ealis/intel-nvidia-hybrid.plugin ]]; then
 		NVIDIA=(nvidia-dkms nvidia-utils cuda lib32-nvidia-utils lib32-opencl-nvidia)
 		HYBRID=(xf86-video-intel lib32-vulkan-intel vulkan-intel optimus-manager)
-	elif [[ -f /EALIS/amd-nvidia-hybrid.plugin ]]; then
+	elif [[ -f /ealis/amd-nvidia-hybrid.plugin ]]; then
 		NVIDIA=(nvidia-dkms nvidia-utils cuda lib32-nvidia-utils lib32-opencl-nvidia)
 		HYBRID=(xf86-video-amdgpu lib32-amdvlk amdvlk optimus-manager)
 	fi
 else
-	if [[ -f /EALIS/nvidia.plugin ]]; then
+	if [[ -f /ealis/nvidia.plugin ]]; then
 	NVIDIA=(nvidia-dkms nvidia-utils cuda lib32-nvidia-utils)
 	fi
-	if [[ -f /EALIS/intel-nvidia-hybrid.plugin ]]; then
+	if [[ -f /ealis/intel-nvidia-hybrid.plugin ]]; then
 		NVIDIA=(nvidia nvidia-utils cuda lib32-nvidia-utils)
 		HYBRID=(xf86-video-intel lib32-vulkan-intel vulkan-intel optimus-manager)
-	elif [[ -f /EALIS/amd-nvidia-hybrid.plugin ]]; then
+	elif [[ -f /ealis/amd-nvidia-hybrid.plugin ]]; then
 		NVIDIA=(nvidia nvidia-utils cuda lib32-nvidia-utils)
 		HYBRID=(xf86-video-amdgpu lib32-amdvlk amdvlk optimus-manager)
 	fi
 fi
-if [[ -f /EALIS/brave.plugin ]]; then
+if [[ -f /ealis/brave.plugin ]]; then
 	BROWSER=($BROWSER brave-bin)
 fi
-if [[ -f /EALIS/chrome.plugin ]]; then
+if [[ -f /ealis/chrome.plugin ]]; then
 	BROWSER=($BROWSER google-chrome)
 fi
-if [[ -f /EALIS/chromium.plugin ]]; then
+if [[ -f /ealis/chromium.plugin ]]; then
 	BROWSER=($BROWSER chromium)
 fi
-if [[ -f /EALIS/firefox.plugin ]]; then
+if [[ -f /ealis/firefox.plugin ]]; then
 	BROWSER=($BROWSER firefox)
 fi
-if [[ -f /EALIS/brave.plugin || -f /EALIS/chrome.plugin || -f /EALIS/chromium.plugin || -f /EALIS/firefox.plugin ]]; then
+if [[ -f /ealis/brave.plugin || -f /ealis/chrome.plugin || -f /ealis/chromium.plugin || -f /ealis/firefox.plugin ]]; then
 	:
 else
 	BROWSER=firefox
 fi
-if [[ -f /EALIS/kvm.plugin ]]; then
+if [[ -f /ealis/kvm.plugin ]]; then
 	VMTOOLS=(spice spice-gtk spice-protocol spice-vdagent qemu-guest-agent) # For QEMU, GNOME Boxes, etc.
 fi
-if [[ -f /EALIS/vboxguest.plugin ]]; then
+if [[ -f /ealis/vboxguest.plugin ]]; then
 	VMTOOLS=(virtualbox-guest-utils xf86-video-vmware) # For VirtualBox virtualisation
 fi
-if [[ -f /EALIS/vmtools.plugin ]]; then
+if [[ -f /ealis/vmtools.plugin ]]; then
 	VMTOOLS=(open-vm-tools xf86-video-vmware) # For VMware virtualisation
 fi
-if [[ -f /EALIS/onlyoffice.plugin ]]; then
+if [[ -f /ealis/onlyoffice.plugin ]]; then
 	OFFICEFLAT=onlyoffice
 else
 	OFFICE=libreoffice-still
 fi
-if [[ -f /EALIS/videowallpaper.plugin ]]; then
+if [[ -f /ealis/videowallpaper.plugin ]]; then
 	VIDEOWALLPAPER=(ghostlexly-gpu-video-wallpaper xwinwrap-0.9-bin)
 fi
-if [[ -f /EALIS/spotify.plugin ]]; then
+if [[ -f /ealis/spotify.plugin ]]; then
 	SPOTIFYFLAT=spotify
 fi
 
@@ -96,10 +96,10 @@ elif [[ $DESKTOP = xfce || $DESKTOP = xfce4 || $Desktop = xfce || $Desktop = xfc
 	GTK=yes
 	DESKTOP=(xfce4 xfce4-goodies)
 elif [[ -z $DESKTOP ]]; then
-	echo -e "You need to fill the DESKTOP variable with a supported Desktop Environt (i.e. \$DESKTOP=cinnamon zsh /EALIS/part2.sh)"
+	echo -e "You need to fill the DESKTOP variable with a supported Desktop Environt (i.e. \$DESKTOP=cinnamon zsh /ealis/part2.sh)"
 	exit
 else
-	echo -e "You entered a unsupported Desktop Environment. You need to fill the DESKTOP variable with a supported Desktop Environt (i.e. \$DESKTOP=cinnamon zsh /EALIS/part2.sh)"
+	echo -e "You entered a unsupported Desktop Environment. You need to fill the DESKTOP variable with a supported Desktop Environt (i.e. \$DESKTOP=cinnamon zsh /ealis/part2.sh)"
 fi
 
 # Configuring the Network Manager
@@ -121,7 +121,7 @@ done
 sudo pacman -Syu --noconfirm
 
 # You may want to enable this plugin to use the chaotic aur mirror to install precompiled aur packages. Keep in mind that this can be a security risk.
-if [[ -f /EALIS/chaotic.plugin ]]; then
+if [[ -f /ealis/chaotic.plugin ]]; then
 	if ! grep -Fqm1 chaotic /etc/pacman.conf; then
 		sudo pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com
 		sudo pacman-key --lsign-key 3056513887B78AEB
@@ -234,7 +234,7 @@ flatpak install --system --assumeyes kdenlive $GAMERFLAT $OFFICEFLAT $SPOTIFYFLA
 sudo localectl set-x11-keymap us pc105 intl
 
 # If you are using a hybrid video card, optimus will be cofigured for you.
-if [[ -f /EALIS/intel-nvidia-hybrid.plugin || -f /EALIS/amd-nvidia-hybrid.plugin ]]; then
+if [[ -f /ealis/intel-nvidia-hybrid.plugin || -f /ealis/amd-nvidia-hybrid.plugin ]]; then
 	sudo systemctl enable optimus-manager.service
 	sudo mkdir -p /etc/optimus-manager || true
 	sudo wget -qO /usr/share/optimus-manager.conf "https://raw.githubusercontent.com/Askannz/optimus-manager/master/optimus-manager.conf"
@@ -407,7 +407,7 @@ EOF
 fi
 
 # Increases the max map count for gaming purposes and creates an autostart file for steam.
-if [[ -f /EALIS/gamer.plugin ]]; then
+if [[ -f /ealis/gamer.plugin ]]; then
 	echo "vm.max_map_count=2147483642" | sudo tee /etc/sysctl.d/98-mmc.conf >/dev/null
 sudo zsh -c "cat /etc/xdg/autostart/steam.desktop" <<-'EOF'
 	[Desktop Entry]
@@ -453,7 +453,7 @@ EOF
 fi
 
 # A sample live wallpaper will be downloaded and configured for you.
-if [[ -f /EALIS/videowallpaper.plugin ]]; then
+if [[ -f /ealis/videowallpaper.plugin ]]; then
 	echo "Downloading a sample live wallpaper (upload on mylivewallpapers.com by 'imjustsaiyan'). This might take awhile..."
 	sudo wget -q --no-check-certificate -O /usr/share/backgrounds/mylivewallpapers.com-Night-Elf-Warcraft-3-Reforged.mp4 "https://drive.google.com/uc?export=download&id=1K0sObATO32nfxTWAlgr9vxkQdJONTsTx"
 	sudo chmod 644 /usr/share/backgrounds/mylivewallpapers.com-Night-Elf-Warcraft-3-Reforged.mp4
@@ -485,7 +485,7 @@ EOF
 fi
 
 # Snapper will be installed.
-if [[ -f /EALIS/snapshots.plugin ]]; then
+if [[ -f /ealis/snapshots.plugin ]]; then
 	if [[ ! -d /.snapshots ]]; then
 		sudo btrfs subvolume create /.snapshots
 	fi
@@ -532,11 +532,11 @@ sudo systemctl set-default graphical.target &>/dev/null
 sudo timedatectl set-ntp true &>/dev/null
 sudo systemctl enable avahi-daemon.service &>/dev/null
 sudo systemctl enable cups.service &>/dev/null
-if [[ -f /EALIS/vboxguest.plugin ]]; then
+if [[ -f /ealis/vboxguest.plugin ]]; then
 	sudo systemctl enable vboxservice.service &>/dev/null
 	sudo usermod $USER -aG vboxsf
 fi
-if [[ -f /EALIS/vmtools.plugin ]]; then
+if [[ -f /ealis/vmtools.plugin ]]; then
 	sudo systemctl enable vmtoolsd.service &>/dev/null
 	sudo systemctl enable vmware-vmblock-fuse.service >dev/null
 fi
@@ -545,7 +545,7 @@ fi
 sudo cp /usr/share/pipewire/pipewire.conf /etc/pipewire/pipewire.conf
 sudo sed -i 's/#default.clock.allowed-rates/default.clock.allowed-rates/' /etc/pipewire/pipewire.conf
 sudo sed -i 's/\ 48000\ /\ 44100\ 48000\ /' /etc/pipewire/pipewire.conf
-if [[ -f /EALIS/no-ip6.plugin ]]; then
+if [[ -f /ealis/no-ip6.plugin ]]; then
 sudo zsh -c "cat > /etc/sysctl.d/99-noip6.conf" <<-'EOF'
 	net.ipv6.conf.all.disable_ipv6=1
 	net.ipv6.conf.default.disable_ipv6=1
@@ -612,11 +612,11 @@ sudo zsh -c "cat > /etc/sysctl.d/98-dirty.conf" <<-'EOF'
 	vm.dirty_background_bytes=16777216
 	vm.dirty_bytes=33554432
 EOF
-if [[ -f /EALIS/snapshots.plugin ]]; then
+if [[ -f /ealis/snapshots.plugin ]]; then
 	for i in `seq 1 5`; do sudo snapper delete $i 2>/dev/null || true; done
 fi
 clear
 echo "This script has runned succesfully. Please reboot..."
-if [[ -f /EALIS/snapshots.plugin ]]; then
+if [[ -f /ealis/snapshots.plugin ]]; then
 	echo "Don't forget to make your first snapshot!"
 fi
