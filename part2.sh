@@ -479,7 +479,7 @@ fi
 
 # A sample live wallpaper will be downloaded and configured for you.
 if [[ -f /ealis/videowallpaper.plugin ]]; then
-	echo "Downloading a sample live wallpaper (upload on mylivewallpapers.com by 'imjustsaiyan'). This might take awhile..."
+	echo "Downloading a sample live wallpaper (originally uploaded on mylivewallpapers.com by 'imjustsaiyan'). This might take awhile..."
 	sudo wget -q --no-check-certificate -O /usr/share/backgrounds/mylivewallpapers.com-Night-Elf-Warcraft-3-Reforged.mp4 "https://drive.google.com/uc?export=download&id=1K0sObATO32nfxTWAlgr9vxkQdJONTsTx"
 	sudo chmod 644 /usr/share/backgrounds/mylivewallpapers.com-Night-Elf-Warcraft-3-Reforged.mp4
 sudo zsh -c 'cat >> /etc/skel/.zshrc' <<-EOF
