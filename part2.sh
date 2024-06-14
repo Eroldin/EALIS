@@ -26,7 +26,7 @@ if [[ -f /ealis/nvidia-old.plugin ]]; then
  	sudo grub-mkconfig -o /boot/grub/grub.cfg
  	NVIDIA=(nvidia-470xx-dkms nvidia-470xx-utils lib32-nvidia-470xx-utils opencl-nvidia-470xx lib32-opencl-nvidia-470xx)
 fi
-if [[ -f /ealis/kernel-lts.plugin || -f /ealis/kernel-hardened.plugin || -f /ealis/kernel-zen.plugin ]]; then
+if [[ -f /ealis/kernel-hardened.plugin || -f /ealis/kernel-zen.plugin ]]; then
 	if [[ -f /ealis/nvidia.plugin ]]; then
 		NVIDIA=(nvidia-dkms nvidia-utils cuda lib32-nvidia-utils lib32-opencl-nvidia)
 	fi
@@ -37,9 +37,20 @@ if [[ -f /ealis/kernel-lts.plugin || -f /ealis/kernel-hardened.plugin || -f /eal
 		NVIDIA=(nvidia-dkms nvidia-utils cuda lib32-nvidia-utils lib32-opencl-nvidia)
 		HYBRID=(xf86-video-amdgpu lib32-amdvlk amdvlk optimus-manager)
 	fi
+elif [[ -f /ealis/kernel-lts.plugin ]]; then
+	if [[ -f /ealis/nvidia.plugin ]]; then
+	NVIDIA=(nvidia-lts nvidia-utils cuda lib32-nvidia-utils)
+	fi
+	if [[ -f /ealis/intel-nvidia-hybrid.plugin ]]; then
+		NVIDIA=(nvidia-lts nvidia-utils cuda lib32-nvidia-utils)
+		HYBRID=(xf86-video-intel lib32-vulkan-intel vulkan-intel optimus-manager)
+	elif [[ -f /ealis/amd-nvidia-hybrid.plugin ]]; then
+		NVIDIA=(nvidia-lts nvidia-utils cuda lib32-nvidia-utils)
+		HYBRID=(xf86-video-amdgpu lib32-amdvlk amdvlk optimus-manager)
+	fi
 else
 	if [[ -f /ealis/nvidia.plugin ]]; then
-	NVIDIA=(nvidia-dkms nvidia-utils cuda lib32-nvidia-utils)
+	NVIDIA=(nvidia nvidia-utils cuda lib32-nvidia-utils)
 	fi
 	if [[ -f /ealis/intel-nvidia-hybrid.plugin ]]; then
 		NVIDIA=(nvidia nvidia-utils cuda lib32-nvidia-utils)
