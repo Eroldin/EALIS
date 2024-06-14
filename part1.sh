@@ -18,16 +18,28 @@ fi
 XFS="$(findmnt -n | grep -o xfs | head -1 || true)"
 BTRFS="$(findmnt -n | grep -o btrfs | head -1 || true)"
 if [[ -f /mnt/ealis/kernel.plugin ]]; then
-	KERNEL=($KERNEL linux linux-headers) # Only necessary if you want this alongside another kernel.
+	if [[ -f /mnt/ealis/kernel-hardened.plugin ]]; then
+		KERNEL=(linux-hardened linux-hardened-headers bubblewrap-suid)
+	else
+		KERNEL=($KERNEL linux linux-headers) # Only necessary if you want this alongside another kernel.
+	fi
 fi
 if [[ -f /mnt/ealis/kernel-lts.plugin ]]; then
-	KERNEL=($KERNEL linux-lts linux-lts-headers)
+	if [[ -f /mnt/ealis/kernel-hardened.plugin ]]; then
+		KERNEL=(linux-hardened linux-hardened-headers bubblewrap-suid)
+	else
+		KERNEL=($KERNEL linux-lts linux-headers-lts)
+	fi
 fi
 if [[ -f /mnt/ealis/kernel-hardened.plugin ]]; then
-	KERNEL=($KERNEL linux-hardened linux-hardened-headers bubblewrap-suid)
+	KERNEL=(linux-hardened linux-hardened-headers bubblewrap-suid)
 fi
 if [[ -f /mnt/ealis/kernel-zen.plugin ]]; then
-	KERNEL=($KERNEL linux-zen linux-zen-headers)
+	if [[ -f /mnt/ealis/kernel-hardened.plugin ]]; then
+		KERNEL=(linux-hardened linux-hardened-headers bubblewrap-suid)
+	else
+		KERNEL=($KERNEL linux-zen linux-headers-zen)
+	fi
 fi
 if [[ -f /mnt/ealis/kernel-zen.plugin || -f /mnt/ealis/kernel-lts.plugin || -f /mnt/ealis/kernel-hardened.plugin ]]; then
 	:
@@ -139,125 +151,87 @@ cat <<-'EOF' > /etc/pacman.conf
 EOF
 
 # No fallbackimages will be created if the LTS kernel installed alongside other kernels.
-if [[ -f /mnt/ealis/kernel.plugin && -f /mnt/ealis/kernel-lts.plugin ]]; then
-cat <<-'EOF' > /mnt/etc/mkinitcpio.d/linux.preset
-	# mkinitcpio preset file for the 'linux' package
-	
-	#ALL_config="/etc/mkinitcpio.conf"
-	ALL_kver="/boot/vmlinuz-linux"
-	
-	#PRESETS=('default' 'fallback')
-	PRESETS=('default')
-	
-	#default_config="/etc/mkinitcpio.conf"
-	default_image="/boot/initramfs-linux.img"
-	#default_uki="/efi/EFI/Linux/arch-linux.efi"
-	#default_options="--splash /usr/share/systemd/bootctl/splash-arch.bmp"
-	
-	#fallback_config="/etc/mkinitcpio.conf"
-	fallback_image="/boot/initramfs-linux-fallback.img"
-	#fallback_uki="/efi/EFI/Linux/arch-linux-fallback.efi"
-	fallback_options="-S autodetect"
+if [[ ! -f /mnt/ealis/kernel-hardened.plugin ]]; then
+	if [[ -f /mnt/ealis/kernel.plugin && -f /mnt/ealis/kernel-lts.plugin ]]; then
+	cat <<-'EOF' > /mnt/etc/mkinitcpio.d/linux.preset
+		# mkinitcpio preset file for the 'linux' package
+		
+		#ALL_config="/etc/mkinitcpio.conf"
+		ALL_kver="/boot/vmlinuz-linux"
+		
+		#PRESETS=('default' 'fallback')
+		PRESETS=('default')
+		
+		#default_config="/etc/mkinitcpio.conf"
+		default_image="/boot/initramfs-linux.img"
+		#default_uki="/efi/EFI/Linux/arch-linux.efi"
+		#default_options="--splash /usr/share/systemd/bootctl/splash-arch.bmp"
+		
+		#fallback_config="/etc/mkinitcpio.conf"
+		fallback_image="/boot/initramfs-linux-fallback.img"
+		#fallback_uki="/efi/EFI/Linux/arch-linux-fallback.efi"
+		fallback_options="-S autodetect"
 EOF
-cat <<-'EOF' > /mnt/etc/mkinitcpio.d/linux-lts.preset
-	# mkinitcpio preset file for the 'linux-lts' package
-	
-	#ALL_config="/etc/mkinitcpio.conf"
-	ALL_kver="/boot/vmlinuz-linux-lts"
-	
-	#PRESETS=('default' 'fallback')
-	PRESETS=('default')
-	
-	#default_config="/etc/mkinitcpio.conf"
-	default_image="/boot/initramfs-linux-lts.img"
-	#default_uki="/efi/EFI/Linux/arch-linux-lts.efi"
-	#default_options="--splash /usr/share/systemd/bootctl/splash-arch.bmp"
-	
-	#fallback_config="/etc/mkinitcpio.conf"
-	fallback_image="/boot/initramfs-linux-lts-fallback.img"
-	#fallback_uki="/efi/EFI/Linux/arch-linux-lts-fallback.efi"
-	fallback_options="-S autodetect"
+	cat <<-'EOF' > /mnt/etc/mkinitcpio.d/linux-lts.preset
+		# mkinitcpio preset file for the 'linux-lts' package
+		
+		#ALL_config="/etc/mkinitcpio.conf"
+		ALL_kver="/boot/vmlinuz-linux-lts"
+		
+		#PRESETS=('default' 'fallback')
+		PRESETS=('default')
+		
+		#default_config="/etc/mkinitcpio.conf"
+		default_image="/boot/initramfs-linux-lts.img"
+		#default_uki="/efi/EFI/Linux/arch-linux-lts.efi"
+		#default_options="--splash /usr/share/systemd/bootctl/splash-arch.bmp"
+		
+		#fallback_config="/etc/mkinitcpio.conf"
+		fallback_image="/boot/initramfs-linux-lts-fallback.img"
+		#fallback_uki="/efi/EFI/Linux/arch-linux-lts-fallback.efi"
+		fallback_options="-S autodetect"
 EOF
-fi
-if [[ -f /mnt/ealis/kernel-hardened.plugin && -f /mnt/ealis/kernel-lts.plugin ]]; then
-cat <<-'EOF' > /mnt/etc/mkinitcpio.d/linux-hardened.preset
-	# mkinitcpio preset file for the 'linux-hardened' package
-	
-	#ALL_config="/etc/mkinitcpio.conf"
-	ALL_kver="/boot/vmlinuz-linux-hardened"
-	
-	#PRESETS=('default' 'fallback')
-	PRESETS=('default')
-	
-	#default_config="/etc/mkinitcpio.conf"
-	default_image="/boot/initramfs-linux-hardened.img"
-	#default_uki="/efi/EFI/Linux/arch-linux-hardened.efi"
-	#default_options="--splash /usr/share/systemd/bootctl/splash-arch.bmp"
-	
-	#fallback_config="/etc/mkinitcpio.conf"
-	fallback_image="/boot/initramfs-linux-hardened-fallback.img"
-	#fallback_uki="/efi/EFI/Linux/arch-linux-hardened-fallback.efi"
-	fallback_options="-S autodetect"
+	fi
+	if [[ -f /mnt/ealis/kernel-zen.plugin && -f /mnt/ealis/kernel-lts.plugin ]]; then
+	cat <<-'EOF' > /mnt/etc/mkinitcpio.d/linux-zen.preset
+		# mkinitcpio preset file for the 'linux-zen' package
+		
+		#ALL_config="/etc/mkinitcpio.conf"
+		ALL_kver="/boot/vmlinuz-linux-zen"
+		
+		#PRESETS=('default' 'fallback')
+		PRESETS=('default')
+		
+		#default_config="/etc/mkinitcpio.conf"
+		default_image="/boot/initramfs-linux-zen.img"
+		#default_uki="/efi/EFI/Linux/arch-linux-zen.efi"
+		#default_options="--splash /usr/share/systemd/bootctl/splash-arch.bmp"
+		
+		#fallback_config="/etc/mkinitcpio.conf"
+		fallback_image="/boot/initramfs-linux-zen-fallback.img"
+		#fallback_uki="/efi/EFI/Linux/arch-linux-zen-fallback.efi"
+		fallback_options="-S autodetect"
 EOF
-cat <<-'EOF' > /mnt/etc/mkinitcpio.d/linux-lts.preset
-	# mkinitcpio preset file for the 'linux-lts' package
-	
-	#ALL_config="/etc/mkinitcpio.conf"
-	ALL_kver="/boot/vmlinuz-linux-lts"
-	
-	#PRESETS=('default' 'fallback')
-	PRESETS=('default')
-	
-	#default_config="/etc/mkinitcpio.conf"
-	default_image="/boot/initramfs-linux-lts.img"
-	#default_uki="/efi/EFI/Linux/arch-linux-lts.efi"
-	#default_options="--splash /usr/share/systemd/bootctl/splash-arch.bmp"
-	
-	#fallback_config="/etc/mkinitcpio.conf"
-	fallback_image="/boot/initramfs-linux-lts-fallback.img"
-	#fallback_uki="/efi/EFI/Linux/arch-linux-lts-fallback.efi"
-	fallback_options="-S autodetect"
+	cat <<-'EOF' > /mnt/etc/mkinitcpio.d/linux-lts.preset
+		# mkinitcpio preset file for the 'linux-lts' package
+		
+		#ALL_config="/etc/mkinitcpio.conf"
+		ALL_kver="/boot/vmlinuz-linux-lts"
+		
+		#PRESETS=('default' 'fallback')
+		PRESETS=('default')
+		
+		#default_config="/etc/mkinitcpio.conf"
+		default_image="/boot/initramfs-linux-lts.img"
+		#default_uki="/efi/EFI/Linux/arch-linux-lts.efi"
+		#default_options="--splash /usr/share/systemd/bootctl/splash-arch.bmp"
+		
+		#fallback_config="/etc/mkinitcpio.conf"
+		fallback_image="/boot/initramfs-linux-lts-fallback.img"
+		#fallback_uki="/efi/EFI/Linux/arch-linux-lts-fallback.efi"
+		fallback_options="-S autodetect"
 EOF
-fi
-if [[ -f /mnt/ealis/kernel-zen.plugin && -f /mnt/ealis/kernel-lts.plugin ]]; then
-cat <<-'EOF' > /mnt/etc/mkinitcpio.d/linux-zen.preset
-	# mkinitcpio preset file for the 'linux-zen' package
-	
-	#ALL_config="/etc/mkinitcpio.conf"
-	ALL_kver="/boot/vmlinuz-linux-zen"
-	
-	#PRESETS=('default' 'fallback')
-	PRESETS=('default')
-	
-	#default_config="/etc/mkinitcpio.conf"
-	default_image="/boot/initramfs-linux-zen.img"
-	#default_uki="/efi/EFI/Linux/arch-linux-zen.efi"
-	#default_options="--splash /usr/share/systemd/bootctl/splash-arch.bmp"
-	
-	#fallback_config="/etc/mkinitcpio.conf"
-	fallback_image="/boot/initramfs-linux-zen-fallback.img"
-	#fallback_uki="/efi/EFI/Linux/arch-linux-zen-fallback.efi"
-	fallback_options="-S autodetect"
-EOF
-cat <<-'EOF' > /mnt/etc/mkinitcpio.d/linux-lts.preset
-	# mkinitcpio preset file for the 'linux-lts' package
-	
-	#ALL_config="/etc/mkinitcpio.conf"
-	ALL_kver="/boot/vmlinuz-linux-lts"
-	
-	#PRESETS=('default' 'fallback')
-	PRESETS=('default')
-	
-	#default_config="/etc/mkinitcpio.conf"
-	default_image="/boot/initramfs-linux-lts.img"
-	#default_uki="/efi/EFI/Linux/arch-linux-lts.efi"
-	#default_options="--splash /usr/share/systemd/bootctl/splash-arch.bmp"
-	
-	#fallback_config="/etc/mkinitcpio.conf"
-	fallback_image="/boot/initramfs-linux-lts-fallback.img"
-	#fallback_uki="/efi/EFI/Linux/arch-linux-lts-fallback.efi"
-	fallback_options="-S autodetect"
-EOF
+	fi
 fi
 if [[ -d /mnt/efi ]]; then
 EFI=/efi
