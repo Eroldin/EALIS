@@ -17,11 +17,11 @@ if [[ -z $VIRTMACH ]]; then
 fi
 XFS="$(findmnt -n | grep -o xfs | head -1 || true)"
 BTRFS="$(findmnt -n | grep -o btrfs | head -1 || true)"
-if [[ -f /mnt/ealis/kernel.plugin ]]; then
+if [[ -f /mnt/ealis/kernel.plugin ]]; then # The kernel.plugin is only necessary if you want this alongside another kernel.
 	if [[ -f /mnt/ealis/kernel-hardened.plugin ]]; then
 		KERNEL=(linux-hardened linux-hardened-headers bubblewrap-suid)
 	else
-		KERNEL=($KERNEL linux linux-headers) # Only necessary if you want this alongside another kernel.
+		KERNEL=($KERNEL linux linux-headers)
 	fi
 fi
 if [[ -f /mnt/ealis/kernel-lts.plugin ]]; then
