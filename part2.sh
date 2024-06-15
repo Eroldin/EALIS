@@ -239,6 +239,9 @@ if [[ $GTK = yes ]]; then
 	yay -D --asdeps cairo fontconfig freetype2 >/dev/null
 	yay -D --asexplicit $NVIDIA $HYBRID $GAMER $VMTOOLS $OFFICE $VIDEOWALLPAPER $BROWSER $DESKTOP dmidecode gvfs gvfs-mtp gvfs-smb unarchiver ttf-sourcecodepro-nerd opensiddur-hebrew-fonts oh-my-posh-bin inotify-tools yad cups cups-pdf system-config-printer gutenprint watchdog breeze xdg-desktop-portal-gtk noto-fonts-emoji xdg-user-dirs-gtk ghostscript gsfonts foomatic-db foomatic-db-engine foomatic-db-nonfree foomatic-db-ppds foomatic-db-nonfree-ppds foomatic-db-gutenprint-ppds sddm sddm-kcm pipewire pipewire-alsa pipewire-pulse archlinux-artwork archlinux-wallpaper keepassxc xviewer flatpak pamac-flatpak gnome-calculator yt-dlp candy-icons-git gtk-theme-bubble-dark-git masterpdfeditor-free dnsmasq networkmanager-openconnect networkmanager-openvpn networkmanager-pptp networkmanager-vpnc network-manager-applet nm-connection-editor gnome-keyring bluez bluez-utils gparted ufw gufw icoutils gimp simple-scan transmission-gtk thunderbird easytag mpv vlc handbrake gst-plugins-base gst-plugins-base-libs gst-plugins-good gst-plugins-bad gst-plugins-ugly gst-libav libdvdnav libdvdcss cdrdao cdrtools ffmpeg ffmpegthumbnailer ffmpegthumbs ttf-ms-fonts noto-fonts-cjk >/dev/null
 fi
+
+sudo flatpak remote-delete flathub-beta >/dev/null 2>&1 || true
+flatpak install --system --assumeyes kdenlive $GAMERFLAT $OFFICEFLAT $SPOTIFYFLAT
 if [[ $DESKTOP =~ gnome-terminal-transparency ]]; then
 	sudo mkdir -p /etc/dconf/profile
 	sudo zsh -c 'cat > /etc/dconf/profile/user' <<-'EOF'
@@ -261,11 +264,8 @@ EOF
 	use-transparent-background=true
 EOF
 	sudo dconf update || true
+	echo 'eval "$(oh-my-posh init zsh)"' | sudo tee -a /etc/skel/.zshrc >/dev/null
 fi
-
-sudo flatpak remote-delete flathub-beta >/dev/null 2>&1 || true
-flatpak install --system --assumeyes kdenlive $GAMERFLAT $OFFICEFLAT $SPOTIFYFLAT
-
 # This sets the keyboard layout to English (US, Intl., with dead keys). Change or remove this if needed.
 sudo localectl set-x11-keymap us pc105 intl
 
@@ -497,9 +497,6 @@ sudo zsh -c 'cat >> /etc/skel/.zshrc' <<-EOF
 	alias livewallpaper="/opt/videowallpaper.sh"
 	alias killlivewallpaper="killall mpv"
 EOF
-if [[ $DESKTOP =~ gnome-terminal-transparency
-echo 'eval "$(oh-my-posh init zsh)"' | sudo tee -a /etc/skel/.zshrc >/dev/null
-fi
 cat /etc/skel/.zshrc | tee $HOME/.zshrc >/dev/null
 sudo zsh -c 'cat > /opt/videowallpaper.sh' <<-EOF 
 	#!/bin/bash
