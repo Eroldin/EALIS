@@ -246,7 +246,7 @@ if [[ $DESKTOP =~ gnome-terminal-transparency ]]; then
 	system-db:local
 EOF
 	sudo mkdir -p /etc/dconf/db/local.d
-	sudo zsh -c cat > '/etc/dconf/db/local.d/00-gnome-terminal' <<-'EOF'
+	sudo zsh -c 'cat > /etc/dconf/db/local.d/00-gnome-terminal' <<-'EOF'
  	[/org/gnome/terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9]
 	audible-bell=false
 	background-color='rgb(0,0,0)'
@@ -260,7 +260,7 @@ EOF
 	use-theme-colors=false
 	use-transparent-background=true
 EOF
-	sudo dconf update
+	sudo dconf update || true
 fi
 
 sudo flatpak remote-delete flathub-beta >/dev/null 2>&1 || true
