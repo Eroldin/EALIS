@@ -269,7 +269,7 @@ pacstrap /mnt man zsh zsh-completions grml-zsh-config reflector grub $EFIINSTALL
 pacstrap /mnt kernel-modules-hook --needed
 cat /etc/pacman.conf > /mnt/etc/pacman.conf
 mkdir -p /mnt/etc/skel/.config/yay
-cat <<-EOF > /mnt/etc/skel/.config/yay/config.json
+cat <<-'EOF' > /mnt/etc/skel/.config/yay/config.json
 	{
 		"aururl": "https://aur.archlinux.org",
 		"aurrpcurl": "https://aur.archlinux.org/rpc?",
@@ -327,7 +327,7 @@ mkdir -m 775 /mnt/var/cache/pacman/aur
 arch-chroot /mnt zsh -c "chown :wheel /var/cache/pacman/aur"
 
 # Changes the locales and spellcheck to those used in the Netherlands, while keeping the English Language. Change this to your locales if needed.
-cat <<-EOF > /mnt/etc/locale.conf
+cat <<-'EOF' > /mnt/etc/locale.conf
 	LANG=en_US.UTF-8
 	LC_ADDRESS=nl_NL.UTF-8
 	LC_IDENTIFICATION=nl_NL.UTF-8
@@ -356,7 +356,7 @@ sed -i 's/#DSHELL\=\/bin\/bash/DSHELL\=\/bin\/zsh/' /mnt/etc/adduser.conf
 ln -sf /usr/share/zoneinfo/Europe/Amsterdam /mnt/etc/localtime
 
 # Configures the zram generator
-cat <<-EOF > /mnt/etc/systemd/zram-generator.conf
+cat <<-'EOF' > /mnt/etc/systemd/zram-generator.conf
 	[zram0]
 	zram-size = ram / 2
 	compression-algorithm = zstd
@@ -371,7 +371,7 @@ echo "vm.swappiness = 10" | tee /mnt/etc/sysctl.d/99-swappiness.conf >/dev/null
 echo "EDITOR=nano" | tee -a /etc/environment >/dev/null
 
 # Enables Syntax Highlighting for nano
-cat <<-EOF >> /mnt/etc/nanorc
+cat <<-'EOF' >> /mnt/etc/nanorc
 	include "/usr/share/nano/*.nanorc"
 	include "/usr/share/nano/extra/*.nanorc"
 	include "/usr/share/nano-syntax-highlighting/*.nanorc"
@@ -379,7 +379,7 @@ EOF
 
 # Generates the fstab file
 genfstab -U /mnt | tee -a /mnt/etc/fstab >/dev/null
-cat <<-EOF >> /mnt/etc/fstab
+cat <<-'EOF' >> /mnt/etc/fstab
 	# /tmp is mounted in ram instead of on the disk
 	tmpfs		/tmp		tmpfs		defaults,size=4G,noatime,mode=1777		0 0
 EOF
@@ -679,9 +679,7 @@ fi
 
 # Changes the bootorder of your system so LTS is not the default.
 if [[ -f /mnt/ealis/kernel.plugin && -f /mnt/ealis/kernel-lts.plugin ]]; then
-sed -i 's/-r/-V/' /mnt/etc/grub.d/10_linux
-elif [[ -f /mnt/ealis/kernel-hardened.plugin && -f /mnt/ealis/kernel-lts.plugin ]]; then
-sed -i 's/-r/-V/' /mnt/etc/grub.d/10_linux
+	sed -i 's/-r/-V/' /mnt/etc/grub.d/10_linux
 fi
 
 # Here you make any changed and additions needed.
