@@ -139,7 +139,7 @@ if [[ -f /ealis/chaotic.plugin ]]; then
 		sudo pacman-key --lsign-key 3056513887B78AEB
 		sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst' --needed --noconfirm
 		sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst' --needed --noconfirm
-sudo zsh -c 'cat >> /etc/pacman.conf' <<-EOF
+sudo zsh -c 'cat >> /etc/pacman.conf' <<-'EOF'
 	[chaotic-aur]
 	Include = /etc/pacman.d/chaotic-mirrorlist
 EOF
@@ -263,9 +263,17 @@ EOF
 	use-theme-colors=false
 	use-transparent-background=true
 EOF
-	sudo dconf update || true
+fi
+
+if [[ $DESKTOP =~ cinnamon ]]; then
+echo "name='Bubble-Dark'" | sudo tee /etc/dconf/db/local.d/01-cinnamon-theme >/dev/null
 	echo 'eval "$(oh-my-posh init zsh)"' | sudo tee -a /etc/skel/.zshrc >/dev/null
 fi
+
+if [[ $GTK = yes ]]; then
+	echo "GTK_THEME=Adwaita-dark" | sudo tee -a /etc/environment
+fi
+
 # This sets the keyboard layout to English (US, Intl., with dead keys). Change or remove this if needed.
 sudo localectl set-x11-keymap us pc105 intl
 
@@ -493,12 +501,12 @@ if [[ -f /ealis/videowallpaper.plugin ]]; then
 	echo "Downloading a sample live wallpaper (originally uploaded on mylivewallpapers.com by 'imjustsaiyan'). This might take awhile..."
 	sudo wget -q --no-check-certificate -O /usr/share/backgrounds/mylivewallpapers.com-Night-Elf-Warcraft-3-Reforged.mp4 "https://drive.google.com/uc?export=download&id=1K0sObATO32nfxTWAlgr9vxkQdJONTsTx"
 	sudo chmod 644 /usr/share/backgrounds/mylivewallpapers.com-Night-Elf-Warcraft-3-Reforged.mp4
-sudo zsh -c 'cat >> /etc/skel/.zshrc' <<-EOF
+sudo zsh -c 'cat >> /etc/skel/.zshrc' <<-'EOF'
 	alias livewallpaper="/opt/videowallpaper.sh"
 	alias killlivewallpaper="killall mpv"
 EOF
 cat /etc/skel/.zshrc | tee $HOME/.zshrc >/dev/null
-sudo zsh -c 'cat > /opt/videowallpaper.sh' <<-EOF 
+sudo zsh -c 'cat > /opt/videowallpaper.sh' <<-'EOF' 
 	#!/bin/bash
 	video-wallpaper.sh --start /usr/share/backgrounds/mylivewallpapers.com-Night-Elf-Warcraft-3-Reforged.mp4 >/dev/null 2>&1 & disown %1
 EOF
