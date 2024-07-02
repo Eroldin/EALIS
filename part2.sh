@@ -247,7 +247,7 @@ if [[ $DESKTOP =~ cinnamon]]; then
 		pkgctl repo clone --protocol=https cinnamon-session
 		cd cinnamon-session
 		sed "/build()/ased '/maybe_restart_user_bus (manager);/d' -i \${pkgname}-\${pkgver}/cinnamon-session/csm-manager.c" -i PKGBUILD
-		makepkg -cirs
+		makepkg -cirs --noconfirm
 		cd $CURRENTDIR
   		yay -Rns devtools
 	fi
