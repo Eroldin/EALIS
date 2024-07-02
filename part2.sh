@@ -239,37 +239,22 @@ if [[ $GTK = yes ]]; then
 	yay -D --asdeps cairo fontconfig freetype2 >/dev/null
 	yay -D --asexplicit $NVIDIA $HYBRID $GAMER $VMTOOLS $OFFICE $VIDEOWALLPAPER $BROWSER $DESKTOP dmidecode gvfs gvfs-mtp gvfs-smb unarchiver ttf-sourcecodepro-nerd opensiddur-hebrew-fonts oh-my-posh-bin inotify-tools yad cups cups-pdf system-config-printer gutenprint watchdog breeze xdg-desktop-portal-gtk noto-fonts-emoji xdg-user-dirs-gtk ghostscript gsfonts foomatic-db foomatic-db-engine foomatic-db-nonfree foomatic-db-ppds foomatic-db-nonfree-ppds foomatic-db-gutenprint-ppds sddm sddm-kcm pipewire pipewire-alsa pipewire-pulse archlinux-artwork archlinux-wallpaper keepassxc xviewer flatpak pamac-flatpak gnome-calculator yt-dlp candy-icons-git gtk-theme-bubble-dark-git masterpdfeditor-free dnsmasq networkmanager-openconnect networkmanager-openvpn networkmanager-pptp networkmanager-vpnc network-manager-applet nm-connection-editor gnome-keyring bluez bluez-utils gparted ufw gufw icoutils gimp simple-scan transmission-gtk thunderbird easytag mpv vlc handbrake gst-plugins-base gst-plugins-base-libs gst-plugins-good gst-plugins-bad gst-plugins-ugly gst-libav libdvdnav libdvdcss cdrdao cdrtools ffmpeg ffmpegthumbnailer ffmpegthumbs ttf-ms-fonts noto-fonts-cjk >/dev/null
 fi
+if [[ $DESKTOP =~ cinnamon]]; then
+	VERSION=$(cinnamon --version)
+	if [[ $VERSION =~ 6.2.2 ]]; then
+ 		yay -S devtools
+		cd /tmp/makepkg
+		pkgctl repo clone --protocol=https cinnamon-session
+		cd cinnamon-session
+		sed "/build()/ased '/maybe_restart_user_bus (manager);/d' -i \${pkgname}-\${pkgver}/cinnamon-session/csm-manager.c" -i PKGBUILD
+		makepkg -cirs
+		cd $CURRENTDIR
+  		yay -Rns devtools
+	fi
+fi
 
 sudo flatpak remote-delete flathub-beta >/dev/null 2>&1 || true
 flatpak install --system --assumeyes kdenlive $GAMERFLAT $OFFICEFLAT $SPOTIFYFLAT
-if [[ $DESKTOP =~ gnome-terminal-transparency ]]; then
-	sudo mkdir -p /etc/dconf/profile
-	sudo zsh -c 'cat > /etc/dconf/profile/user' <<-'EOF'
-	user-db:user
-	system-db:local
-EOF
-	sudo mkdir -p /etc/dconf/db/local.d
-	sudo zsh -c 'cat > /etc/dconf/db/local.d/00-gnome-terminal' <<-'EOF'
- 	[/org/gnome/terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9]
-	audible-bell=false
-	background-color='rgb(0,0,0)'
-	background-transparency-percent=23
-	bold-is-bright=true
-	default-size-columns=120
-	default-size-rows=30
-	font='SauceCodePro Nerd Font 10'
-	foreground-color='rgb(255,255,255)'
-	use-system-font=false
-	use-theme-colors=false
-	use-transparent-background=true
-EOF
-fi
-
-if [[ $DESKTOP =~ cinnamon ]]; then
-echo "name='Bubble-Dark'" | sudo tee /etc/dconf/db/local.d/01-cinnamon-theme >/dev/null
-	echo 'eval "$(oh-my-posh init zsh)"' | sudo tee -a /etc/skel/.zshrc >/dev/null
-fi
-
 if [[ $GTK = yes ]]; then
 	echo "GTK_THEME=Adwaita-dark" | sudo tee -a /etc/environment
 fi
