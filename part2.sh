@@ -103,7 +103,7 @@ desktop=$(echo $desktop | tr '[:upper:]' '[:lower:]')
 Desktop=$(echo $Desktop | tr '[:upper:]' '[:lower:]')
 if [[ $DESKTOP = cinnamon || $Desktop = cinnamon || $desktop=cinnamon ]]; then
 	GTK=yes
-	DESKTOP=(cinnamon nemo-engrampa nemo-preview gnome-screenshot gedit gnome-terminal-transparency gnome-control-center gnome-system-monitor gnome-power-manager mintlocale gnome-themes-extra cinnamon-sounds)
+	DESKTOP=(cinnamon nemo-engrampa nemo-preview gnome-screenshot gedit gnome-terminal-transparency gnome-control-center gnome-system-monitor gnome-power-manager mintlocale gnome-themes-extra)
 elif [[ $DESKTOP = xfce || $DESKTOP = xfce4 || $Desktop = xfce || $Desktop = xfce4 || $desktop = xfce || $desktop = xfce4 ]]; then
 	GTK=yes
 	DESKTOP=(xfce4 xfce4-goodies)
