@@ -256,7 +256,7 @@ fi
 sudo flatpak remote-delete flathub-beta >/dev/null 2>&1 || true
 flatpak install --system --assumeyes kdenlive $GAMERFLAT $OFFICEFLAT $SPOTIFYFLAT
 if [[ $GTK = yes ]]; then
-	echo "GTK_THEME=Adwaita-dark" | sudo tee -a /etc/environment
+	echo "GTK_THEME=Adwaita-dark" | sudo tee -a /etc/environment >/dev/null
 fi
 
 # This sets the keyboard layout to English (US, Intl., with dead keys). Change or remove this if needed.
