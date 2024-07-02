@@ -243,6 +243,7 @@ if [[ $DESKTOP =~ cinnamon]]; then
 	VERSION=$(cinnamon --version)
 	if [[ $VERSION =~ 6.2.2 ]]; then
  		yay -S devtools
+		mkdir /tmp/makepkg >/dev/null 2>&1 || true
 		cd /tmp/makepkg
 		pkgctl repo clone --protocol=https cinnamon-session
 		cd cinnamon-session
