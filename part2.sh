@@ -242,7 +242,7 @@ fi
 if [[ $DESKTOP =~ cinnamon ]]; then
 	VERSION=$(cinnamon --version)
 	if [[ $VERSION =~ 6.2.2 ]]; then
- 		yay -S devtools
+ 		yay -S devtools --needed --noconfirm
 		mkdir /tmp/makepkg >/dev/null 2>&1 || true
 		cd /tmp/makepkg
 		pkgctl repo clone --protocol=https cinnamon-session
@@ -250,7 +250,7 @@ if [[ $DESKTOP =~ cinnamon ]]; then
 		sed "/build()/ased '/maybe_restart_user_bus (manager);/d' -i \${pkgname}-\${pkgver}/cinnamon-session/csm-manager.c" -i PKGBUILD
 		makepkg -cirs --noconfirm
 		cd $CURRENTDIR
-  		yay -Rns devtools
+  		yay -Rns devtools --needed --noconfirm
 	fi
 fi
 
@@ -581,6 +581,7 @@ sudo zsh -c "cat > /etc/sysctl.d/99-noip6.conf" <<-'EOF'
 	net.ipv6.conf.default.disable_ipv6=1
 	net.ipv6.conf.lo.disable_ipv6=1
 EOF
+sudo sed -i 's/yes/no/' /etc/default/ufw
 fi
 sudo zsh -c "cat > /etc/pamac.conf" <<-'EOF'
 	### Pamac configuration file
