@@ -107,6 +107,8 @@ if [[ $DESKTOP = cinnamon || $Desktop = cinnamon || $desktop = cinnamon ]]; then
 elif [[ $DESKTOP = xfce || $DESKTOP = xfce4 || $Desktop = xfce || $Desktop = xfce4 || $desktop = xfce || $desktop = xfce4 ]]; then
 	GTK=yes
 	DESKTOP=(xfce4 xfce4-goodies)
+elif [[ $DESKTOP = openbox || $Desktop = openbox || $desktop = openbox ]]; then
+	DESKTOP=openbox
 elif [[ -z $DESKTOP ]]; then
 	echo -e "You need to fill the DESKTOP variable with a supported Desktop Environt (i.e. \$DESKTOP=cinnamon zsh /ealis/part2.sh)"
 	exit
@@ -238,6 +240,11 @@ if [[ $GTK = yes ]]; then
 	yay -S --needed --noconfirm $NVIDIA $HYBRID $GAMER $VMTOOLS $OFFICE $VIDEOWALLPAPER $BROWSER $DESKTOP dmidecode gvfs gvfs-mtp gvfs-smb unarchiver ttf-sourcecodepro-nerd opensiddur-hebrew-fonts oh-my-posh-bin inotify-tools yad cups cups-pdf system-config-printer gutenprint watchdog breeze xdg-desktop-portal-gtk noto-fonts-emoji xdg-user-dirs-gtk ghostscript gsfonts foomatic-db foomatic-db-engine foomatic-db-nonfree foomatic-db-ppds foomatic-db-nonfree-ppds foomatic-db-gutenprint-ppds sddm sddm-kcm pipewire pipewire-alsa pipewire-pulse archlinux-artwork archlinux-wallpaper keepassxc xviewer flatpak pamac-flatpak gnome-calculator yt-dlp candy-icons-git gtk-theme-bubble-dark-git masterpdfeditor-free dnsmasq networkmanager-openconnect networkmanager-openvpn networkmanager-pptp networkmanager-vpnc network-manager-applet nm-connection-editor gnome-keyring bluez bluez-utils gparted ufw gufw icoutils gimp simple-scan transmission-gtk thunderbird easytag mpv vlc handbrake gst-plugins-base gst-plugins-base-libs gst-plugins-good gst-plugins-bad gst-plugins-ugly gst-libav libdvdnav libdvdcss cdrdao cdrtools ffmpeg ffmpegthumbnailer ffmpegthumbs ttf-ms-fonts noto-fonts-cjk
 	yay -D --asdeps cairo fontconfig freetype2 >/dev/null
 	yay -D --asexplicit $NVIDIA $HYBRID $GAMER $VMTOOLS $OFFICE $VIDEOWALLPAPER $BROWSER $DESKTOP dmidecode gvfs gvfs-mtp gvfs-smb unarchiver ttf-sourcecodepro-nerd opensiddur-hebrew-fonts oh-my-posh-bin inotify-tools yad cups cups-pdf system-config-printer gutenprint watchdog breeze xdg-desktop-portal-gtk noto-fonts-emoji xdg-user-dirs-gtk ghostscript gsfonts foomatic-db foomatic-db-engine foomatic-db-nonfree foomatic-db-ppds foomatic-db-nonfree-ppds foomatic-db-gutenprint-ppds sddm sddm-kcm pipewire pipewire-alsa pipewire-pulse archlinux-artwork archlinux-wallpaper keepassxc xviewer flatpak pamac-flatpak gnome-calculator yt-dlp candy-icons-git gtk-theme-bubble-dark-git masterpdfeditor-free dnsmasq networkmanager-openconnect networkmanager-openvpn networkmanager-pptp networkmanager-vpnc network-manager-applet nm-connection-editor gnome-keyring bluez bluez-utils gparted ufw gufw icoutils gimp simple-scan transmission-gtk thunderbird easytag mpv vlc handbrake gst-plugins-base gst-plugins-base-libs gst-plugins-good gst-plugins-bad gst-plugins-ugly gst-libav libdvdnav libdvdcss cdrdao cdrtools ffmpeg ffmpegthumbnailer ffmpegthumbs ttf-ms-fonts noto-fonts-cjk >/dev/null
+fi
+if [[ $DESKTOP = openbox ]]; then
+	yay -S --needed --noconfirm openbox kitty rofi tint2 picom dunst flameshot bc upd72020x-fw rsync mlocate bash-completion cairo fontconfig freetype2 xorg-xlsfonts pkgstats zip unzip unrar p7zip lzop cpio avahi nss-mdns alsa-utils alsa-plugins dosfstools exfat-utils f2fs-tools fuse fuse-exfat mtpfs xorg-server xorg-apps xorg-xinit xorg-xkill xorg-xinput xf86-input-libinput mesa
+	yay -D --asdeps cairo fontconfig freetype2 >/dev/null
+	yay -D --asexplicit openbox kitty rofi tint2 picom dunst flameshot bc upd72020x-fw rsync mlocate bash-completion xorg-xlsfonts pkgstats zip unzip unrar p7zip lzop cpio avahi nss-mdns alsa-utils alsa-plugins dosfstools exfat-utils f2fs-tools fuse fuse-exfat mtpfs xorg-server xorg-apps xorg-xinit xorg-xkill xorg-xinput xf86-input-libinput mesa >/dev/null
 fi
 if [[ $DESKTOP =~ cinnamon ]]; then
 	VERSION=$(cinnamon --version)
