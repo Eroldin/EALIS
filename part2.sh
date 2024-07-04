@@ -101,7 +101,7 @@ fi
 DESKTOP=$(echo $DESKTOP | tr '[:upper:]' '[:lower:]')
 desktop=$(echo $desktop | tr '[:upper:]' '[:lower:]')
 Desktop=$(echo $Desktop | tr '[:upper:]' '[:lower:]')
-if [[ $DESKTOP = cinnamon || $Desktop = cinnamon || $desktop=cinnamon ]]; then
+if [[ $DESKTOP = cinnamon || $Desktop = cinnamon || $desktop = cinnamon ]]; then
 	GTK=yes
 	DESKTOP=(cinnamon nemo-engrampa nemo-preview gnome-screenshot gedit gnome-terminal-transparency gnome-control-center gnome-system-monitor gnome-power-manager mintlocale gnome-themes-extra)
 elif [[ $DESKTOP = xfce || $DESKTOP = xfce4 || $Desktop = xfce || $Desktop = xfce4 || $desktop = xfce || $desktop = xfce4 ]]; then
@@ -111,7 +111,7 @@ elif [[ -z $DESKTOP ]]; then
 	echo -e "You need to fill the DESKTOP variable with a supported Desktop Environt (i.e. \$DESKTOP=cinnamon zsh /ealis/part2.sh)"
 	exit
 else
-	echo -e "You entered a unsupported Desktop Environment. You need to fill the DESKTOP variable with a supported Desktop Environt (i.e. \$DESKTOP=cinnamon zsh /ealis/part2.sh)"
+	echo -e "You entered a unsupported Desktop Environment. You need to fill the DESKTOP variable with a supported Desktop Environment (i.e. DESKTOP=cinnamon zsh /ealis/part2.sh)"
 fi
 
 # Configuring the Network Manager
