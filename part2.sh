@@ -545,7 +545,7 @@ EOF
 fi
 
 yay -Rsc --noconfirm $(yay -Qdqt)
-yes | sudo pacman -Scc --noconfirm
+yes | sudo pacman -Scc
 
 # This configures sddm and enables the necessary services.
 sudo sddm --example-config | sudo tee /etc/sddm.conf >/dev/null
