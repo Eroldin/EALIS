@@ -239,7 +239,7 @@ if [[ $GTK = yes ]]; then
 	yay -D --asdeps cairo fontconfig freetype2 >/dev/null
 	yay -D --asexplicit $NVIDIA $HYBRID $GAMER $VMTOOLS $OFFICE $VIDEOWALLPAPER $BROWSER $DESKTOP dmidecode gvfs gvfs-mtp gvfs-smb unarchiver ttf-sourcecodepro-nerd opensiddur-hebrew-fonts oh-my-posh-bin inotify-tools yad cups cups-pdf system-config-printer gutenprint watchdog breeze xdg-desktop-portal-gtk noto-fonts-emoji xdg-user-dirs-gtk ghostscript gsfonts foomatic-db foomatic-db-engine foomatic-db-nonfree foomatic-db-ppds foomatic-db-nonfree-ppds foomatic-db-gutenprint-ppds sddm sddm-kcm pipewire pipewire-alsa pipewire-pulse archlinux-artwork archlinux-wallpaper keepassxc xviewer flatpak pamac-flatpak gnome-calculator yt-dlp candy-icons-git gtk-theme-bubble-dark-git masterpdfeditor-free dnsmasq networkmanager-openconnect networkmanager-openvpn networkmanager-pptp networkmanager-vpnc network-manager-applet nm-connection-editor gnome-keyring bluez bluez-utils gparted ufw gufw icoutils gimp simple-scan transmission-gtk thunderbird easytag mpv vlc handbrake gst-plugins-base gst-plugins-base-libs gst-plugins-good gst-plugins-bad gst-plugins-ugly gst-libav libdvdnav libdvdcss cdrdao cdrtools ffmpeg ffmpegthumbnailer ffmpegthumbs ttf-ms-fonts noto-fonts-cjk >/dev/null
 fi
-if [[ $DESKTOP =~ cinnamon]]; then
+if [[ $DESKTOP =~ cinnamon ]]; then
 	VERSION=$(cinnamon --version)
 	if [[ $VERSION =~ 6.2.2 ]]; then
  		yay -S devtools
