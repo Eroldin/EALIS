@@ -358,6 +358,27 @@ while true; do
 	fi
 done
 
+sed -i "s/#$LANG1.UTF-8/$LANG1.UTF-8/" /mnt/etc/locale.gen
+sed -i "s/#$LANG1\ ISO-8859-1/$LANG1\ ISO-8859-1/" /mnt/etc/locale.gen
+if [[ $LANG2 != $LANG1 ]]; then
+	sed -i "s/#$LANG2.UTF-8/$LANG2.UTF-8/" /mnt/etc/locale.gen
+	sed -i "s/#$LANG2\ ISO-8859-1/$LANG2\ ISO-8859-1/" /mnt/etc/locale.gen
+fi
+if [[ $LANG3 != $LANG1 || $LANG3 != $LANG2 ]]; then
+	sed -i "s/#$LANG3.UTF-8/$LANG3.UTF-8/" /mnt/etc/locale.gen
+	sed -i "s/#$LANG3\ ISO-8859-1/$LANG3\ ISO-8859-1/" /mnt/etc/locale.gen
+fi
+arch-chroot /mnt zsh -c "locale-gen"
+read -r HUNSPELL"?Which hunspell (spellcheck) packages do you want to install (i.e. hunspell-en_us)? "
+if [[ -z $HUNSPELL ]]; then
+	:
+else
+	echo $HUNSPELL >/mnt/hunspell
+	sed -i 's/\s\+/\n/g' /mnt/hunspell || true
+	zsh -c "pacman -S --noconfirm - < /hunspell"
+	rm /mnt/hunspell
+fi
+
 cat <<-EOF > /mnt/etc/locale.conf
 	LANG=$LANG1.UTF-8
 	LC_ADDRESS=$LANG2.UTF-8
@@ -370,26 +391,6 @@ cat <<-EOF > /mnt/etc/locale.conf
 	LC_TELEPHONE=$LANG2.UTF-8
 	LC_TIME=$LANG3.UTF-8
 EOF
-sed -i 's/#$LANG1.UTF-8/$LANG1.UTF-8/' /mnt/etc/locale.gen
-sed -i 's/#$LANG1\ ISO-8859-1/$LANG1\ ISO-8859-1/' /mnt/etc/locale.gen
-if [[ $LANG2 != $LANG1 ]]; then
-	sed -i 's/#$LANG2.UTF-8/$LANG2.UTF-8/' /mnt/etc/locale.gen
-	sed -i 's/#$LANG2\ ISO-8859-1/$LANG2\ ISO-8859-1/' /mnt/etc/locale.gen
-fi
-if [[ $LANG3 != $LANG1 || $LANG3 != $LANG2 ]]; then
-	sed -i 's/#$LANG3.UTF-8/$LANG3.UTF-8/' /mnt/etc/locale.gen
-	sed -i 's/#$LANG3\ ISO-8859-1/$LANG3\ ISO-8859-1/' /mnt/etc/locale.gen
-fi
-arch-chroot /mnt zsh -c "locale-gen"
-read -r HUNSPELL"?Which hunspell (spellcheck) packages do you want to install (i.e. hunspell-en_us)? "
-if [[ -z $HUNSPELL ]]; then
-	:
-else
-	echo $HUNSPELL >/mnt/hunspell
-	sed -i 's/\s\+/\n/g' /mnt/hunspell || true
-	zsh -c "pacman -S - < /hunspell"
-	rm /mnt/hunspell
-fi
 # Configuring the timezone.
 echo "Configuring the clock of this system..."
 while true; do
