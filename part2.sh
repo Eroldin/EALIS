@@ -109,7 +109,7 @@ elif [[ $DESKTOP = xfce || $DESKTOP = xfce4 || $Desktop = xfce || $Desktop = xfc
 	DESKTOP=(xfce4 xfce4-goodies candy-icons-git gtk-theme-bubble-dark-git)
 elif [[ $DESKTOP = awesomewm || $Desktop = awesomewm || $desktop = awesomewm ]]; then
 	GTK=yes
-	DESKOP=(awesome rofi picom i3lock-fancy xclip ttf-roboto polkit-gnome materia-theme lxappearance flameshot pnmixer network-manager-applet xfce4-power-manager qt5-styleplugins papirus-icon-theme)
+	DESKTOP=(awesome rofi picom i3lock-fancy xclip ttf-roboto polkit-gnome materia-theme lxappearance flameshot pnmixer network-manager-applet xfce4-power-manager qt5-styleplugins papirus-icon-theme)
 elif [[ -z $DESKTOP ]]; then
 	echo -e "You need to fill the DESKTOP variable with a supported Desktop Environt (i.e. \DESKTOP=cinnamon zsh /ealis/part2.sh)"
 	exit
