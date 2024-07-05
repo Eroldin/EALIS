@@ -375,7 +375,7 @@ if [[ -z $HUNSPELL ]]; then
 else
 	echo $HUNSPELL >/mnt/hunspell
 	sed -i 's/\s\+/\n/g' /mnt/hunspell || true
-	zsh -c "pacman -S --noconfirm - < /hunspell"
+	arch-chroot /mnt zsh -c "pacman -S --noconfirm - < /hunspell"
 	rm /mnt/hunspell
 fi
 
