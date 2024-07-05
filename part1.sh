@@ -261,8 +261,16 @@ clear
 echo "Running the first part of the script." && sleep 2
 
 # The mirrorlist for those living in the Netherlands and/or germany. Change if needed.
-echo "Reflector is updating your mirrorlist. This might take a while..."
-reflector -c germany,netherlands -p https --age 12 --sort score -n 5 --save /etc/pacman.d/mirrorlist
+while true; do
+	read -r REFLECTOR"?From which countries' mirrors do you want to download your software (i.e. canada,\"united states\") ? "
+	if [[ -z $REFLECTOR ]]; then
+		echo "Enter at least 1 country name."
+	else
+		echo "Reflector is updating your mirrorlist. This might take a while..."
+		reflector -c $REFLECTOR -p https --age 12 --sort score -n 5 --save /etc/pacman.d/mirrorlist
+		break
+	fi
+done
 
 # Installing the base system
 pacstrap /mnt man zsh zsh-completions grml-zsh-config reflector grub $EFIINSTALL $MICROCODE $XFS $BTRFS $LVM2 $KERNEL ntfs-3g gdisk util-linux base base-devel networkmanager wget nano nano-syntax-highlighting git curl zram-generator rsync smbclient linux-firmware linux-firmware-whence --needed
