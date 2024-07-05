@@ -326,34 +326,70 @@ sed -i 's/#PKGDEST\=\/home\/packages/PKGDEST\=\/var\/cache\/pacman\/aur/' /mnt/e
 mkdir -m 775 /mnt/var/cache/pacman/aur
 arch-chroot /mnt zsh -c "chown :wheel /var/cache/pacman/aur"
 
-# Changes the locales and spellcheck to those used in the Netherlands, while keeping the English Language. Change this to your locales if needed.
-cat <<-'EOF' > /mnt/etc/locale.conf
-	LANG=en_US.UTF-8
-	LC_ADDRESS=nl_NL.UTF-8
-	LC_IDENTIFICATION=nl_NL.UTF-8
-	LC_MEASUREMENT=nl_NL.UTF-8
-	LC_MONETARY=nl_NL.UTF-8
-	LC_NAME=nl_NL.UTF-8
-	LC_NUMERIC=nl_NL.UTF-8
-	LC_PAPER=nl_NL.UTF-8
-	LC_TELEPHONE=nl_NL.UTF-8
-	LC_TIME=en_GB.UTF-8
-EOF
-sed -i 's/#en_US.UTF-8/en_US.UTF-8/' /mnt/etc/locale.gen
-sed -i 's/#en_US\ ISO-8859-1/en_US\ ISO-8859-1/' /mnt/etc/locale.gen
-sed -i 's/#en_GB.UTF-8/en_GB.UTF-8/' /mnt/etc/locale.gen
-sed -i 's/#en_GB\ ISO-8859-1/en_GB\ ISO-8859-1/' /mnt/etc/locale.gen
-sed -i 's/#nl_NL.UTF-8/nl_NL.UTF-8/' /mnt/etc/locale.gen
-sed -i 's/#nl_NL\ ISO-8859-1/nl_NL\ ISO-8859-1/' /mnt/etc/locale.gen
-arch-chroot /mnt zsh -c "locale-gen"
-pacstrap /mnt hunspell-nl hunspell-en_us
-
 # Installs adduser for easy user configuration.
 arch-chroot /mnt zsh -c "pacman -U --needed --noconfirm /ealis/adduser-deb-3.137-1-any.pkg.tar.zst" >/dev/null # The sourcecode can be found here: https://salsa.debian.org/debian/adduser
 sed -i 's/#DSHELL\=\/bin\/bash/DSHELL\=\/bin\/zsh/' /mnt/etc/adduser.conf
 
-# Sets the time to that in the Netherlands. Change to your country if needed.
-ln -sf /usr/share/zoneinfo/Europe/Amsterdam /mnt/etc/localtime
+# Coniguring the language of the system.
+clear
+echo "Configuring the language of the system..."
+while true; do
+	read -r LANG1"?What language do you want the system to be in (i.e. en_US)? "
+	if [[ -z $LANG1 ]]; then
+		echo "Please enter a language."
+	else
+		break
+	fi
+done
+while true; do
+	read -r LANG2"?What language should be used for the other locales, except time (i.e. en_US)? "
+	if [[ -z $LANG2 ]]; then
+		echo "Please enter a language."
+	else
+		break
+	fi
+done
+while true; do
+	read -r LANG3"?What language should be used for the time locale (i.e. en_US)? "
+	if [[ -z $LANG3 ]]; then
+		echo "Please enter a language."
+	else
+		break
+	fi
+done
+
+cat <<-EOF > /mnt/etc/locale.conf
+	LANG=$LANG1.UTF-8
+	LC_ADDRESS=$LANG2.UTF-8
+	LC_IDENTIFICATION=$LANG2.UTF-8
+	LC_MEASUREMENT=$LANG2.UTF-8
+	LC_MONETARY=$LANG2.UTF-8
+	LC_NAME=$LANG2.UTF-8
+	LC_NUMERIC=$LANG2.UTF-8
+	LC_PAPER=$LANG2.UTF-8
+	LC_TELEPHONE=$LANG2.UTF-8
+	LC_TIME=$LANG3.UTF-8
+EOF
+sed -i 's/#$LANG1.UTF-8/$LANG1.UTF-8/' /mnt/etc/locale.gen
+sed -i 's/#$LANG1\ ISO-8859-1/$LANG1\ ISO-8859-1/' /mnt/etc/locale.gen
+sed -i 's/#$LANG3.UTF-8/$LANG3.UTF-8/' /mnt/etc/locale.gen
+sed -i 's/#$LANG3\ ISO-8859-1/$LANG3\ ISO-8859-1/' /mnt/etc/locale.gen
+sed -i 's/#$LANG2.UTF-8/$LANG2.UTF-8/' /mnt/etc/locale.gen
+sed -i 's/#$LANG2\ ISO-8859-1/$LANG2\ ISO-8859-1/' /mnt/etc/locale.gen
+arch-chroot /mnt zsh -c "locale-gen"
+pacstrap /mnt hunspell-nl hunspell-$LANG1
+
+# Configuring the timezone.
+echo "Configuring the clock of this system..."
+while true; do
+	read -r ZONEINFO"?In what timezone are you currently living (i.e. US/Central)? "
+ 	if [[ -z $ZONEINFO ]]; then
+		echo "Please enter your timezone."
+	else
+		break
+	fi
+done
+ln -sf /usr/share/zoneinfo/$ZONEINFO /mnt/etc/localtime
 
 # Configures the zram generator
 cat <<-'EOF' > /mnt/etc/systemd/zram-generator.conf
