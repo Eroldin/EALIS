@@ -264,7 +264,7 @@ if [[ $DESKTOP =~ cinnamon ]]; then
 fi
 
 # Thanks to ChrisTitusTech for this beautiful AwesomeWM configuration.
-if [[ $DESKTOP =~ awesomewm ]]; then
+if [[ $DESKTOP =~ awesome ]]; then
 	sudo mkdir -p /etc/skel/.config >/dev/null 2>&1 || true
 	sudo git clone https://github.com/ChrisTitusTech/titus-awesome /etc/skel/.config/awesome
 	sudo mkdir ~/.config/rofi
