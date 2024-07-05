@@ -386,8 +386,9 @@ if [[ -z $HUNSPELL ]]; then
 	:
 else
 	echo $HUNSPELL >/mnt/hunspell
-	sed -i 's/\s\+/\n/g' /mnt/hunspell
-zsh -c 	
+	sed -i 's/\s\+/\n/g' /mnt/hunspell || true
+	zsh -c "pacman -S - < /hunspell"
+	rm /mnt/hunspell
 fi
 # Configuring the timezone.
 echo "Configuring the clock of this system..."
