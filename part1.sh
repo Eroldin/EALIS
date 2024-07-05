@@ -698,6 +698,11 @@ EOF
 	fi
 done
 
+# Changes the bootorder of your system so LTS is not the default.
+if [[ -f /mnt/ealis/kernel.plugin && -f /mnt/ealis/kernel-lts.plugin ]]; then
+	sed -i 's/-r/-V/' /mnt/etc/grub.d/10_linux
+fi
+
 # Configuring the bootloader
 echo "";echo "Configuring GRUB..." && sleep 2
 if [[ $ENCUSED = crypto ]]; then
@@ -723,11 +728,6 @@ else
   	else
    		arch-chroot /mnt zsh -c "grub-install --target=i386-pc --recheck >/dev/null && grub-mkconfig -o /boot/grub/grub.cfg >/dev/null"
 	fi
-fi
-
-# Changes the bootorder of your system so LTS is not the default.
-if [[ -f /mnt/ealis/kernel.plugin && -f /mnt/ealis/kernel-lts.plugin ]]; then
-	sed -i 's/-r/-V/' /mnt/etc/grub.d/10_linux
 fi
 
 # Here you make any changed and additions needed.
