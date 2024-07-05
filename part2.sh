@@ -257,7 +257,7 @@ if [[ $DESKTOP =~ cinnamon ]]; then
 		sed "/build()/ased '/maybe_restart_user_bus (manager);/d' -i \${pkgname}-\${pkgver}/cinnamon-session/csm-manager.c" -i PKGBUILD
 		makepkg -cirs --noconfirm
 		cd $CURRENTDIR
-  		yay -Rns devtools --needed --noconfirm
+  		yay -Rns devtools --noconfirm
 	fi
 fi
 
