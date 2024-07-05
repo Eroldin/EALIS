@@ -107,9 +107,9 @@ if [[ $DESKTOP = cinnamon || $Desktop = cinnamon || $desktop = cinnamon ]]; then
 elif [[ $DESKTOP = xfce || $DESKTOP = xfce4 || $Desktop = xfce || $Desktop = xfce4 || $desktop = xfce || $desktop = xfce4 ]]; then
 	GTK=yes
 	DESKTOP=(xfce4 xfce4-goodies candy-icons-git gtk-theme-bubble-dark-git)
-elif [[ $DESKTOP = openbox || $Desktop = openbox || $desktop = openbox ]]; then
+elif [[ $DESKTOP = awesomewm || $Desktop = awesomewm || $desktop = awesomewm ]]; then
 	GTK=yes
-	DESKTOP=(openbox kitty rofi tint2 picom dunst flameshot pavucontrol volumeicon polkit-gnome feh thunar obmenu-generator tela-circle-icon-theme-git obconf dracula-openbox-theme catppuccin-gtk-theme-mocha catppuccin-cursors-mocha nerd-fonts ttf-hack-nerd ttf-jetbrains-mono-nerd ttf-roboto cantarell-fonts)
+	DESKOP=(awesomewm ttf-roboto ttf-roboto-nerd rofi picom i3lock-fancy-git xclipd pa-applet-git qt5-styleplugins materia-gtk-theme papirus-icon-theme lxappearance spectacle flameshot numlockx)
 elif [[ -z $DESKTOP ]]; then
 	echo -e "You need to fill the DESKTOP variable with a supported Desktop Environt (i.e. \DESKTOP=cinnamon zsh /ealis/part2.sh)"
 	exit
@@ -242,7 +242,7 @@ if [[ $GTK = yes ]]; then
 	sudo -v
 	yay -S --needed --noconfirm $NVIDIA $HYBRID $GAMER $VMTOOLS $OFFICE $VIDEOWALLPAPER $BROWSER $DESKTOP dmidecode gvfs gvfs-mtp gvfs-smb unarchiver ttf-sourcecodepro-nerd opensiddur-hebrew-fonts oh-my-posh-bin inotify-tools yad cups cups-pdf system-config-printer gutenprint watchdog breeze xdg-desktop-portal-gtk noto-fonts-emoji xdg-user-dirs-gtk ghostscript gsfonts foomatic-db foomatic-db-engine foomatic-db-nonfree foomatic-db-ppds foomatic-db-nonfree-ppds foomatic-db-gutenprint-ppds sddm sddm-kcm pipewire pipewire-alsa pipewire-pulse archlinux-artwork archlinux-wallpaper keepassxc xviewer flatpak pamac-flatpak gnome-calculator yt-dlp masterpdfeditor-free dnsmasq networkmanager-openconnect networkmanager-openvpn networkmanager-pptp networkmanager-vpnc network-manager-applet nm-connection-editor gnome-keyring bluez bluez-utils gparted ufw gufw icoutils gimp simple-scan transmission-gtk thunderbird easytag mpv vlc handbrake gst-plugins-base gst-plugins-base-libs gst-plugins-good gst-plugins-bad gst-plugins-ugly gst-libav libdvdnav libdvdcss cdrdao cdrtools ffmpeg ffmpegthumbnailer ffmpegthumbs ttf-ms-fonts noto-fonts-cjk
 	yay -D --asdeps cairo fontconfig freetype2 >/dev/null
-	if [[ $DESKTOP =~ openbox ]]; then
+	if [[ $DESKTOP =~ awesomewm ]]; then
 		yay -D --asexplicit $NVIDIA $HYBRID $GAMER $VMTOOLS $OFFICE $VIDEOWALLPAPER $BROWSER dmidecode gvfs gvfs-mtp gvfs-smb unarchiver ttf-sourcecodepro-nerd opensiddur-hebrew-fonts oh-my-posh-bin inotify-tools yad cups cups-pdf system-config-printer gutenprint watchdog breeze xdg-desktop-portal-gtk noto-fonts-emoji xdg-user-dirs-gtk ghostscript gsfonts foomatic-db foomatic-db-engine foomatic-db-nonfree foomatic-db-ppds foomatic-db-nonfree-ppds foomatic-db-gutenprint-ppds sddm sddm-kcm pipewire pipewire-alsa pipewire-pulse archlinux-artwork archlinux-wallpaper keepassxc xviewer flatpak pamac-flatpak gnome-calculator yt-dlp masterpdfeditor-free dnsmasq networkmanager-openconnect networkmanager-openvpn networkmanager-pptp networkmanager-vpnc network-manager-applet nm-connection-editor gnome-keyring bluez bluez-utils gparted ufw gufw icoutils gimp simple-scan transmission-gtk thunderbird easytag mpv vlc handbrake gst-plugins-base gst-plugins-base-libs gst-plugins-good gst-plugins-bad gst-plugins-ugly gst-libav libdvdnav libdvdcss cdrdao cdrtools ffmpeg ffmpegthumbnailer ffmpegthumbs ttf-ms-fonts noto-fonts-cjk >/dev/null
 	else
 		yay -D --asexplicit $NVIDIA $HYBRID $GAMER $VMTOOLS $OFFICE $VIDEOWALLPAPER $BROWSER $DESKTOP dmidecode gvfs gvfs-mtp gvfs-smb unarchiver ttf-sourcecodepro-nerd opensiddur-hebrew-fonts oh-my-posh-bin inotify-tools yad cups cups-pdf system-config-printer gutenprint watchdog breeze xdg-desktop-portal-gtk noto-fonts-emoji xdg-user-dirs-gtk ghostscript gsfonts foomatic-db foomatic-db-engine foomatic-db-nonfree foomatic-db-ppds foomatic-db-nonfree-ppds foomatic-db-gutenprint-ppds sddm sddm-kcm pipewire pipewire-alsa pipewire-pulse archlinux-artwork archlinux-wallpaper keepassxc xviewer flatpak pamac-flatpak gnome-calculator yt-dlp masterpdfeditor-free dnsmasq networkmanager-openconnect networkmanager-openvpn networkmanager-pptp networkmanager-vpnc network-manager-applet nm-connection-editor gnome-keyring bluez bluez-utils gparted ufw gufw icoutils gimp simple-scan transmission-gtk thunderbird easytag mpv vlc handbrake gst-plugins-base gst-plugins-base-libs gst-plugins-good gst-plugins-bad gst-plugins-ugly gst-libav libdvdnav libdvdcss cdrdao cdrtools ffmpeg ffmpegthumbnailer ffmpegthumbs ttf-ms-fonts noto-fonts-cjk >/dev/null
@@ -262,10 +262,17 @@ if [[ $DESKTOP =~ cinnamon ]]; then
   		yay -Rns devtools --noconfirm
 	fi
 fi
+if [[ $DESKTOP =~ awesomewm ]]; then
+	sudo git clone https://github.com/Eroldin/material-awesome.git /etc/skel/.config/awesome
+	sudo zsh -c "cat >> /etc/environment" <<-'EOF'
+	XDG_CURRENT_DESKTOP=Unity
+	QT_QPA_PLATFORMTHEME=gtk2
+EOF
+fi
 
 sudo flatpak remote-delete flathub-beta >/dev/null 2>&1 || true
 flatpak install --system --assumeyes kdenlive $GAMERFLAT $OFFICEFLAT $SPOTIFYFLAT
-if [[ $GTK = yes ]]; then
+if [[ $DESKTOP =~ cinnamon || $DESKTOP =~ xfce4 ]]; then
 	echo "GTK_THEME=Adwaita-dark" | sudo tee -a /etc/environment >/dev/null
 fi
 
@@ -654,14 +661,6 @@ sudo zsh -c "cat > /etc/sysctl.d/98-dirty.conf" <<-'EOF'
 EOF
 if [[ -f /ealis/snapshots.plugin ]]; then
 	for i in `seq 1 5`; do sudo snapper delete $i 2>/dev/null || true; done
-fi
-if [[ $DESKTOP =~ openbox ]]; then
-	cd /tmp
-	git clone https://github.com/Eroldin/openbox-minimal.git && cd openbox-*
-	sudo cp -rv openbox /etc/skel/.config/
-	cp -rv openbox "$HOME/.config/"
-	obmenu-generator -p -i || true
-	cd $CURRENTDIR
 fi
 clear
 echo "This script has runned succesfully. Please reboot..."
