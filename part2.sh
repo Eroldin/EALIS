@@ -109,7 +109,7 @@ elif [[ $DESKTOP = xfce || $DESKTOP = xfce4 || $Desktop = xfce || $Desktop = xfc
 	DESKTOP=(xfce4 xfce4-goodies candy-icons-git gtk-theme-bubble-dark-git)
 elif [[ $DESKTOP = awesomewm || $Desktop = awesomewm || $desktop = awesomewm ]]; then
 	GTK=yes
-	DESKOP=(awesomewm ttf-roboto ttf-roboto-nerd rofi picom i3lock-fancy-git xclipd pa-applet-git qt5-styleplugins materia-gtk-theme papirus-icon-theme lxappearance spectacle flameshot numlockx)
+	DESKOP=(awesome rofi picom i3lock-fancy xclip ttf-roboto polkit-gnome materia-theme lxappearance flameshot pnmixer network-manager-applet xfce4-power-manager qt5-styleplugins papirus-icon-theme)
 elif [[ -z $DESKTOP ]]; then
 	echo -e "You need to fill the DESKTOP variable with a supported Desktop Environt (i.e. \DESKTOP=cinnamon zsh /ealis/part2.sh)"
 	exit
@@ -262,8 +262,17 @@ if [[ $DESKTOP =~ cinnamon ]]; then
   		yay -Rns devtools --noconfirm
 	fi
 fi
+
+# Thanks to ChrisTitusTech for this beautiful AwesomeWM configuration.
 if [[ $DESKTOP =~ awesomewm ]]; then
-	sudo git clone https://github.com/Eroldin/material-awesome.git /etc/skel/.config/awesome
+	sudo mkdir -p /etc/skel/.config >/dev/null 2>&1 || true
+	sudo git clone https://github.com/ChrisTitusTech/titus-awesome /etc/skel/.config/awesome
+	sudo mkdir ~/.config/rofi
+	sudo cp /etc/skel/.config/awesome/theme/config.rasi /etc/skel/.config/rofi/config.rasi
+	sudo sed -i '/@import/c\@import "'$HOME'/.config/awesome/theme/sidebar.rasi"' /etc/skel/.config/rofi/config.rasi
+	mkdir -p ~/.config/rofi
+	cp $HOME/.config/awesome/theme/config.rasi $HOME/.config/rofi/config.rasi
+	sed -i '/@import/c\@import "'$HOME'/.config/awesome/theme/sidebar.rasi"' ~/.config/rofi/config.rasi
 	sudo zsh -c "cat >> /etc/environment" <<-'EOF'
 	XDG_CURRENT_DESKTOP=Unity
 	QT_QPA_PLATFORMTHEME=gtk2
