@@ -594,30 +594,34 @@ sudo sed -i 's/Numlock=none/Numlock=on/' /etc/sddm.conf
 sudo systemctl enable --now watchdog &>/dev/null
 sudo systemctl enable --now ufw &>/dev/null
 sudo ufw enable &>/dev/null
-if [[ ! $DESKTOP =~ awesome && -z $VIRTMACH ]]; then
-	sudo systemctl enable sddm &>/dev/null
-else
-	sudo zsh -c "cat >/etc/skel/.zprofile" <<-'EOF'
-	if [ -z "$DISPLAY" ] && [ "$XDG_VTNR" = 1 ]; then
-		exec startx
-	fi
-EOF
-	echo "awesome" | sudo tee /etc/skel/.xinitrc >/dev/null
-	cat <<-'EOF' > $HOME/.zprofile
-	if [ -z "$DISPLAY" ] && [ "$XDG_VTNR" = 1 ]; then
-		exec startx
-	fi
-EOF
-	echo "awesome" > $HOME/.xinitrc
+if [[ $DESKTOP =~ awesome ]]; then
+	if [[ ! -z $VIRTMACH ]]; then
+ 		sudo zsh -c "cat >/etc/skel/.zprofile" <<'EOF'
+if [ -z "$DISPLAY" ] && [ "$XDG_VTNR" = 1 ]; then
+	exec startx
 fi
-sudo systemctl enable bluetooth.service &>/dev/null
-sudo systemctl enable linux-modules-cleanup.service &>/dev/null
-sudo systemctl set-default graphical.target &>/dev/null
+EOF
+		echo "awesome" | sudo tee /etc/skel/.xinitrc >/dev/null
+		cat <<'EOF' > $HOME/.zprofile
+if [ -z "$DISPLAY" ] && [ "$XDG_VTNR" = 1 ]; then
+	exec startx
+fi
+EOF
+		echo "awesome" > $HOME/.xinitrc
+	else
+		sudo systemctl enable sddm.service >/dev/null
+	fi
+else
+	sudo systemctl enable sddm.service >/dev/null
+fi
+sudo systemctl enable bluetooth.service >/dev/null
+sudo systemctl enable linux-modules-cleanup.service >/dev/null
+sudo systemctl set-default graphical.target >/dev/null
 sudo timedatectl set-ntp true &>/dev/null
-sudo systemctl enable avahi-daemon.service &>/dev/null
-sudo systemctl enable cups.service &>/dev/null
+sudo systemctl enable avahi-daemon.service >/dev/null
+sudo systemctl enable cups.service >/dev/null
 if [[ -f /ealis/vboxguest.plugin ]]; then
-	sudo systemctl enable vboxservice.service &>/dev/null
+	sudo systemctl enable vboxservice.service >/dev/null
 	sudo usermod $USER -aG vboxsf
 fi
 if [[ -f /ealis/vmtools.plugin ]]; then
