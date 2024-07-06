@@ -581,7 +581,7 @@ sudo systemctl enable --now watchdog &>/dev/null
 sudo systemctl enable --now ufw &>/dev/null
 sudo ufw enable &>/dev/null
 if [[ $DESKTOP =~ awesome ]]; then
-	sudo bash -c "cat >/etc/skel/.zprofile" <<-'EOF'
+	sudo zsh -c "cat >/etc/skel/.zprofile" <<-'EOF'
 	if [ -z "$DISPLAY" ] && [ "$XDG_VTNR" = 1 ]; then
 		exec startx
 	fi
