@@ -268,11 +268,11 @@ fi
 if [[ $DESKTOP =~ awesome ]]; then
 	sudo mkdir -p /etc/skel/.config >/dev/null 2>&1 || true
 	sudo git clone https://github.com/ChrisTitusTech/titus-awesome /etc/skel/.config/awesome
-	sudo mkdir /etc/skel/.config/rofi
+	sudo mkdir /etc/skel/.config/rofi || true
 	sudo cp /etc/skel/.config/awesome/theme/config.rasi /etc/skel/.config/rofi/config.rasi
 	sudo sed -i '/@import/c\@import "'$HOME'/.config/awesome/theme/sidebar.rasi"' /etc/skel/.config/rofi/config.rasi
-	git clone https://github.com/ChrisTitusTech/titus-awesome /etc/skel/.config/awesome
-	mkdir -p ~/.config/rofi
+	git clone https://github.com/ChrisTitusTech/titus-awesome $HOME/.config/awesome
+	mkdir -p ~/.config/rofi || true
 	cp $HOME/.config/awesome/theme/config.rasi $HOME/.config/rofi/config.rasi
 	sed -i '/@import/c\@import "'$HOME'/.config/awesome/theme/sidebar.rasi"' ~/.config/rofi/config.rasi
 	sudo zsh -c "cat >> /etc/environment" <<-'EOF'
