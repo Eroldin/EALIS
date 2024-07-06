@@ -11,6 +11,7 @@ set -e
 
 clear
 echo "Running the second part of the script." && sleep 2
+sudo -v
 # Setting the current dir in a variable and turning on numlock
 CURRENTDIR="$(pwd)"
 setleds +num
