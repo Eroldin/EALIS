@@ -400,6 +400,7 @@ cat <<-EOF > /mnt/etc/locale.conf
 	LC_TIME=$LANG3.UTF-8
 EOF
 # Configuring the timezone.
+clear
 echo "Configuring the clock of this system..."
 while true; do
 	read -r ZONEINFO"?In what timezone are you currently living (i.e. US/Central)? "
