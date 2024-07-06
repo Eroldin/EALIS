@@ -99,7 +99,7 @@ if [[ -f /ealis/spotify.plugin ]]; then
 	SPOTIFYFLAT=spotify
 fi
 
-VIRTMACH="$(dmesg | grep -i hypervisor || true)"
+VIRTMACH="$(sudo dmesg | grep -i hypervisor || true)"
 DESKTOP=$(echo $DESKTOP | tr '[:upper:]' '[:lower:]')
 desktop=$(echo $desktop | tr '[:upper:]' '[:lower:]')
 Desktop=$(echo $Desktop | tr '[:upper:]' '[:lower:]')
