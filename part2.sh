@@ -11,6 +11,22 @@ set -e
 
 clear
 echo "Running the second part of the script." && sleep 2
+VIRTMACH="$(sudo dmesg | grep -i hypervisor || true)"
+DESKTOP=$(echo $DESKTOP | tr '[:upper:]' '[:lower:]')
+desktop=$(echo $desktop | tr '[:upper:]' '[:lower:]')
+Desktop=$(echo $Desktop | tr '[:upper:]' '[:lower:]')
+if [[ $DESKTOP = awesomewm || $Desktop = awesomewm || $desktop = awesomewm || $DESKTOP = awesome || $Desktop = awesome || $desktop = awesome ]]; then
+	while true; do
+		read -r yn"?AwesomeWM is, although added to the script, not yet supported. Are you shure you want to continue? [y/N] "
+ 		case $yn in
+			[yY] ) break;;
+			[nN] ) exit;;
+			"" ) exit;;
+			*) echo "Wrong answer. Answer with either \"Y\" or \"N\"." >&2
+                esac
+    	
+	done
+fi
 sudo -v
 # Setting the current dir in a variable and turning on numlock
 CURRENTDIR="$(pwd)"
@@ -98,11 +114,6 @@ fi
 if [[ -f /ealis/spotify.plugin ]]; then
 	SPOTIFYFLAT=spotify
 fi
-
-VIRTMACH="$(sudo dmesg | grep -i hypervisor || true)"
-DESKTOP=$(echo $DESKTOP | tr '[:upper:]' '[:lower:]')
-desktop=$(echo $desktop | tr '[:upper:]' '[:lower:]')
-Desktop=$(echo $Desktop | tr '[:upper:]' '[:lower:]')
 if [[ $DESKTOP = cinnamon || $Desktop = cinnamon || $desktop = cinnamon ]]; then
 	GTK=yes
 	DESKTOP=(cinnamon nemo-engrampa nemo-preview gnome-screenshot gedit gnome-terminal-transparency gnome-control-center gnome-system-monitor gnome-power-manager mintlocale gnome-themes-extra candy-icons-git gtk-theme-bubble-dark-git)
@@ -591,11 +602,13 @@ else
 		exec startx
 	fi
 EOF
+	echo "awesome" | sudo tee /etc/skel/.xinitrc >/dev/null
 	cat <<-'EOF' > $HOME/.zprofile
 	if [ -z "$DISPLAY" ] && [ "$XDG_VTNR" = 1 ]; then
 		exec startx
 	fi
 EOF
+	echo "awesome" > $HOME/.xinitrc
 fi
 sudo systemctl enable bluetooth.service &>/dev/null
 sudo systemctl enable linux-modules-cleanup.service &>/dev/null
