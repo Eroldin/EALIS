@@ -580,7 +580,20 @@ sudo sed -i 's/Numlock=none/Numlock=on/' /etc/sddm.conf
 sudo systemctl enable --now watchdog &>/dev/null
 sudo systemctl enable --now ufw &>/dev/null
 sudo ufw enable &>/dev/null
-sudo systemctl enable sddm &>/dev/null
+if [[ $DESKTOP =~ awesome ]]; then
+	sudo bash -c "cat >/etc/skel/.zprofile" <<-'EOF'
+	if [ -z "$DISPLAY" ] && [ "$XDG_VTNR" = 1 ]; then
+		exec startx
+	fi
+EOF
+cat <<-'EOF' > $HOME/.zprofile
+	if [ -z "$DISPLAY" ] && [ "$XDG_VTNR" = 1 ]; then
+		exec startx
+	fi
+EOF
+else
+	sudo systemctl enable sddm &>/dev/null
+fi
 sudo systemctl enable bluetooth.service &>/dev/null
 sudo systemctl enable linux-modules-cleanup.service &>/dev/null
 sudo systemctl set-default graphical.target &>/dev/null
