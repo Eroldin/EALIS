@@ -406,10 +406,10 @@ while true; do
  	if [[ -z $ZONEINFO ]]; then
 		echo "Please enter your timezone."
 	else
+		ln -sf /usr/share/zoneinfo/$ZONEINFO /mnt/etc/localtime
 		break
 	fi
 done
-ln -sf /usr/share/zoneinfo/$ZONEINFO /mnt/etc/localtime
 
 # Configures the zram generator
 cat <<-'EOF' > /mnt/etc/systemd/zram-generator.conf
