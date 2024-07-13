@@ -299,9 +299,6 @@ if [[ $DESKTOP =~ cinnamon || $DESKTOP =~ xfce4 ]]; then
 	echo "GTK_THEME=Adwaita-dark" | sudo tee -a /etc/environment >/dev/null
 fi
 
-# This sets the keyboard layout to English (US, Intl., with dead keys). Change or remove this if needed.
-sudo localectl set-x11-keymap us pc105 intl
-
 # If you are using a hybrid video card, optimus will be cofigured for you.
 if [[ -f /ealis/intel-nvidia-hybrid.plugin || -f /ealis/amd-nvidia-hybrid.plugin ]]; then
 	sudo systemctl enable optimus-manager.service
@@ -704,6 +701,12 @@ EOF
 if [[ -f /ealis/snapshots.plugin ]]; then
 	for i in `seq 1 5`; do sudo snapper delete $i 2>/dev/null || true; done
 fi
+clear
+# Setting up the keyboard layout
+echo "We are setting up the X11 keyboard configuration."
+read -r KEYBOARD1"?What is the keymap of your system? "
+read -r KEYBOARD2"?What variant of the keyboard are you using? Leave empty for the standard variant. "
+sudo localectl set-x11-keymap $KEYBOARD1 pc105 $KEYBOARD2
 clear
 echo "This script has runned succesfully. Please reboot..."
 if [[ -f /ealis/snapshots.plugin ]]; then
