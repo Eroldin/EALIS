@@ -557,11 +557,10 @@ if [[ -f /ealis/snapshots.plugin ]]; then
 	fi
 	yay -S --noconfirm --needed btrfs-assistant
 	yay -S --noconfirm --needed grub-btrfs
-	yay -S --noconfirm --needed snap-pac-git
+	yay -S --noconfirm --needed snap-pac
 	yay -S --noconfirm --needed snapper
-	yay -S --noconfirm --needed snapper-tools-git
+	yay -S --noconfirm --needed snapper-tools
 	yay -S --noconfirm --needed snapper-support
-	yay -S --noconfirm --needed snapper-rollback
  	yay -D --asexplicit snapper >/dev/null
 	sudo systemctl enable grub-btrfsd.service &>/dev/null
 	sudo cp -d /etc/snapper/config-templates/snapper /etc/snapper/configs/root
@@ -704,7 +703,10 @@ fi
 clear
 # Setting up the keyboard layout
 echo "We are setting up the X11 keyboard configuration."
-read -r KEYBOARD1"?What is the keymap of your system? "
+read -r KEYBOARD1"?What is the keymap of your system? Leave empty for the default (us). "
+if [[ -z $KEYBOARD1 ]]; then
+	KEYBOARD1=us
+fi
 read -r KEYBOARD2"?What variant of the keyboard are you using? Leave empty for the standard variant. "
 sudo localectl set-x11-keymap $KEYBOARD1 pc105 $KEYBOARD2
 clear
