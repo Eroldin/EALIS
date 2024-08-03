@@ -521,8 +521,8 @@ fi
 # A sample live wallpaper will be downloaded and configured for you.
 if [[ -f /ealis/videowallpaper.plugin ]]; then
 	echo "Downloading a sample live wallpaper (originally uploaded on mylivewallpapers.com by 'imjustsaiyan'). This might take awhile..."
-	sudo wget -q --no-check-certificate -O /usr/share/backgrounds/mylivewallpapers.com-Night-Elf-Warcraft-3-Reforged.mp4 "https://drive.google.com/uc?export=download&id=1K0sObATO32nfxTWAlgr9vxkQdJONTsTx"
-	sudo chmod 644 /usr/share/backgrounds/mylivewallpapers.com-Night-Elf-Warcraft-3-Reforged.mp4
+	sudo wget -q --no-check-certificate -O "/usr/share/backgrounds/Elf in the Rain (Live Wallpaper).mp4" "https://drive.google.com/uc?export=download&id=1v3YWGMdwuFh6S8ynnDHjGAchB71_8VXy"
+	sudo chmod 644 "/usr/share/backgrounds/Elf in the Rain (Live Wallpaper).mp4"
 sudo zsh -c 'cat >> /etc/skel/.zshrc' <<-'EOF'
 	alias livewallpaper="/opt/videowallpaper.sh"
 	alias killlivewallpaper="killall mpv"
@@ -530,7 +530,7 @@ EOF
 cat /etc/skel/.zshrc | tee $HOME/.zshrc >/dev/null
 sudo zsh -c 'cat > /opt/videowallpaper.sh' <<-'EOF' 
 	#!/bin/bash
-	video-wallpaper.sh --start /usr/share/backgrounds/mylivewallpapers.com-Night-Elf-Warcraft-3-Reforged.mp4 >/dev/null 2>&1 & disown %1
+	video-wallpaper.sh --start "/usr/share/backgrounds/Elf in the Rain (Live Wallpaper).mp4"  >/dev/null 2>&1 & disown %1
 EOF
 
 sudo chmod 775 /opt/videowallpaper.sh
